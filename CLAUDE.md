@@ -52,11 +52,7 @@ payload-analytics/
 ```typescript
 analyticsPlugin({
   provider: 'plausible' | 'umami' | 'matomo' | 'posthog' | 'google-analytics' | AnalyticsProvider,
-  plausible?: PlausibleConfig,
-  umami?: UmamiConfig,
-  matomo?: MatomoConfig,
-  posthog?: PostHogConfig,
-  googleAnalytics?: GoogleAnalyticsConfig,
+  config?: PlausibleConfig | UmamiConfig | MatomoConfig | PostHogConfig | GoogleAnalyticsConfig,
   enabled?: boolean,
   enableDashboard?: boolean,
   dashboardPath?: string,
@@ -68,6 +64,16 @@ analyticsPlugin({
   defaultTimePeriod?: TimePeriod,
   comparisonOptions?: ComparisonOption[],
   enableComparison?: boolean,
+})
+
+// Example usage:
+analyticsPlugin({
+  provider: 'plausible',
+  config: {
+    apiKey: process.env.PLAUSIBLE_API_KEY,
+    siteId: process.env.PLAUSIBLE_SITE_ID,
+    apiHost: 'https://plausible.io',
+  },
 })
 ```
 

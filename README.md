@@ -40,7 +40,7 @@ export default buildConfig({
   plugins: [
     analyticsPlugin({
       provider: 'plausible',
-      plausible: {
+      config: {
         apiKey: process.env.PLAUSIBLE_API_KEY,
         siteId: process.env.PLAUSIBLE_SITE_ID,
         apiHost: 'https://plausible.io', // or your self-hosted instance
@@ -55,7 +55,7 @@ export default buildConfig({
 ```typescript
 analyticsPlugin({
   provider: 'umami',
-  umami: {
+  config: {
     apiKey: process.env.UMAMI_API_KEY,
     siteId: process.env.UMAMI_SITE_ID,
     apiHost: 'https://analytics.example.com', // your Umami instance
@@ -68,7 +68,7 @@ analyticsPlugin({
 ```typescript
 analyticsPlugin({
   provider: 'matomo',
-  matomo: {
+  config: {
     apiToken: process.env.MATOMO_API_TOKEN,
     siteId: process.env.MATOMO_SITE_ID,
     apiHost: 'https://matomo.example.com', // your Matomo instance
@@ -81,7 +81,7 @@ analyticsPlugin({
 ```typescript
 analyticsPlugin({
   provider: 'posthog',
-  posthog: {
+  config: {
     apiKey: process.env.POSTHOG_API_KEY,
     projectId: process.env.POSTHOG_PROJECT_ID,
     apiHost: 'https://app.posthog.com', // or your self-hosted instance
@@ -94,7 +94,7 @@ analyticsPlugin({
 ```typescript
 analyticsPlugin({
   provider: 'google-analytics',
-  googleAnalytics: {
+  config: {
     propertyId: process.env.GA4_PROPERTY_ID,
     apiKey: process.env.GA4_API_KEY,
   },

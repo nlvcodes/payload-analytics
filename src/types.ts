@@ -61,13 +61,8 @@ export interface AnalyticsViewConfig {
   position?: 'beforeNavLinks' | 'afterNavLinks'
 }
 
-export interface AnalyticsPluginConfig {
-  provider: 'plausible' | 'umami' | 'matomo' | 'posthog' | 'google-analytics' | AnalyticsProvider
-  plausible?: PlausibleConfig
-  umami?: UmamiConfig
-  matomo?: MatomoConfig
-  posthog?: PostHogConfig
-  googleAnalytics?: GoogleAnalyticsConfig
+// Base configuration shared by all providers
+interface BaseAnalyticsConfig {
   enabled?: boolean
   enableDashboard?: boolean
   dashboardPath?: string
@@ -79,6 +74,26 @@ export interface AnalyticsPluginConfig {
   defaultTimePeriod?: TimePeriod
   comparisonOptions?: ComparisonOption[]
   enableComparison?: boolean
+}
+
+// Provider-specific configurations using discriminated unions
+export type AnalyticsPluginConfig = BaseAnalyticsConfig & (
+  | { provider: 'plausible'; config?: PlausibleConfig }
+  | { provider: 'umami'; config?: UmamiConfig }
+  | { provider: 'matomo'; config?: MatomoConfig }
+  | { provider: 'posthog'; config?: PostHogConfig }
+  | { provider: 'google-analytics'; config?: GoogleAnalyticsConfig }
+  | { provider: AnalyticsProvider; config?: never }
+)
+
+// Legacy support - to be deprecated
+export interface LegacyAnalyticsPluginConfig extends BaseAnalyticsConfig {
+  provider: 'plausible' | 'umami' | 'matomo' | 'posthog' | 'google-analytics' | AnalyticsProvider
+  plausible?: PlausibleConfig
+  umami?: UmamiConfig
+  matomo?: MatomoConfig
+  posthog?: PostHogConfig
+  googleAnalytics?: GoogleAnalyticsConfig
 }
 
 export interface DashboardData {

@@ -1,5 +1,5 @@
 import type { Config } from 'payload'
-import type { AnalyticsPluginConfig, AnalyticsProvider, DashboardWidgetConfig, AnalyticsViewConfig } from './types'
+import type { AnalyticsPluginConfig, LegacyAnalyticsPluginConfig, AnalyticsProvider, DashboardWidgetConfig, AnalyticsViewConfig } from './types'
 import { createPlausibleProvider } from './providers/plausible'
 import { createUmamiProvider } from './providers/umami'
 import { createMatomoProvider } from './providers/matomo'
@@ -8,14 +8,10 @@ import { createGoogleAnalyticsProvider } from './providers/google-analytics'
 import { DEFAULT_TIME_PERIODS, DEFAULT_COMPARISON_OPTIONS } from './constants'
 import path from 'path'
 
-export const analyticsPlugin = (pluginConfig: AnalyticsPluginConfig) => (config: Config): Config => {
+export const analyticsPlugin = (pluginConfig: AnalyticsPluginConfig | LegacyAnalyticsPluginConfig) => (config: Config): Config => {
+  // Extract base configuration
   const {
     provider = 'plausible',
-    plausible,
-    umami,
-    matomo,
-    posthog,
-    googleAnalytics,
     enabled = true,
     enableDashboard = true,
     dashboardPath = '/analytics',
@@ -28,6 +24,34 @@ export const analyticsPlugin = (pluginConfig: AnalyticsPluginConfig) => (config:
     comparisonOptions = DEFAULT_COMPARISON_OPTIONS,
     enableComparison = true,
   } = pluginConfig
+
+  // Handle provider configuration - support both new and legacy patterns
+  let providerConfig: any = {}
+  
+  if ('config' in pluginConfig) {
+    // New pattern: config field
+    providerConfig = pluginConfig.config || {}
+  } else {
+    // Legacy pattern: provider-specific fields
+    const legacyConfig = pluginConfig as LegacyAnalyticsPluginConfig
+    switch (provider) {
+      case 'plausible':
+        providerConfig = legacyConfig.plausible || {}
+        break
+      case 'umami':
+        providerConfig = legacyConfig.umami || {}
+        break
+      case 'matomo':
+        providerConfig = legacyConfig.matomo || {}
+        break
+      case 'posthog':
+        providerConfig = legacyConfig.posthog || {}
+        break
+      case 'google-analytics':
+        providerConfig = legacyConfig.googleAnalytics || {}
+        break
+    }
+  }
 
   // Handle backward compatibility for dashboardWidget
   const widgetConfig: DashboardWidgetConfig = typeof dashboardWidget === 'boolean' 
@@ -48,19 +72,19 @@ export const analyticsPlugin = (pluginConfig: AnalyticsPluginConfig) => (config:
   if (typeof provider === 'string') {
     switch (provider) {
       case 'plausible':
-        providerInstance = createPlausibleProvider(plausible || {})
+        providerInstance = createPlausibleProvider(providerConfig)
         break
       case 'umami':
-        providerInstance = createUmamiProvider(umami || {})
+        providerInstance = createUmamiProvider(providerConfig)
         break
       case 'matomo':
-        providerInstance = createMatomoProvider(matomo || {})
+        providerInstance = createMatomoProvider(providerConfig)
         break
       case 'posthog':
-        providerInstance = createPostHogProvider(posthog || {})
+        providerInstance = createPostHogProvider(providerConfig)
         break
       case 'google-analytics':
-        providerInstance = createGoogleAnalyticsProvider(googleAnalytics || {})
+        providerInstance = createGoogleAnalyticsProvider(providerConfig)
         break
       default:
         throw new Error(`Unknown analytics provider: ${provider}`)
