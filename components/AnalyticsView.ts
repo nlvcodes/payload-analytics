@@ -1,0 +1,1 @@
+export { AnalyticsView as default } from '../src/components/AnalyticsView'

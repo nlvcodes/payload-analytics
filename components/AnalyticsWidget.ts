@@ -1,0 +1,1 @@
+export { AnalyticsWidget as default } from '../src/components/AnalyticsWidget'

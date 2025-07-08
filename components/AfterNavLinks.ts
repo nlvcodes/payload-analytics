@@ -1,0 +1,1 @@
+export { AfterNavLinks as default } from '../src/components/AfterNavLinksServer'
