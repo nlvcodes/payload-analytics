@@ -11,10 +11,18 @@ export const AnalyticsClient: React.FC = () => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   
-  // Get config from global
-  const timePeriods = (window as any).__analyticsTimePeriods || ['day', '7d', '30d', '12mo']
-  const defaultTimePeriod = (window as any).__analyticsDefaultTimePeriod || '7d'
-  const enableComparison = (window as any).__analyticsEnableComparison !== false
+  // Get config from global - safe for SSR
+  const [timePeriods, setTimePeriods] = useState<TimePeriod[]>(['day', '7d', '30d', '12mo'])
+  const [defaultTimePeriod, setDefaultTimePeriod] = useState<TimePeriod>('7d')
+  const [enableComparison, setEnableComparison] = useState<boolean>(true)
+  
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setTimePeriods((window as any).__analyticsTimePeriods || ['day', '7d', '30d', '12mo'])
+      setDefaultTimePeriod((window as any).__analyticsDefaultTimePeriod || '7d')
+      setEnableComparison((window as any).__analyticsEnableComparison !== false)
+    }
+  }, [])
   
   const [period, setPeriod] = useState<TimePeriod>(defaultTimePeriod)
 
@@ -84,7 +92,7 @@ export const AnalyticsClient: React.FC = () => {
         font-weight: 500;
         color: var(--theme-text-light);
         padding: 0.75rem 1rem;
-        border-bottom: 1px solid var(--theme-elevation-200);
+        border-bottom: 1px solid var(--theme-elevation-150);
         font-size: 0.875rem;
       }
       .analytics-table td {
@@ -184,7 +192,6 @@ export const AnalyticsClient: React.FC = () => {
         marginBottom: '3rem'
       }}>
         <div className="gutter gutter--left gutter--right" style={{
-          background: 'var(--theme-elevation-100)',
           border: '1px solid var(--theme-elevation-200)',
           borderRadius: 'var(--border-radius-m)',
           padding: 'calc(var(--base) * 1.5)'
@@ -213,7 +220,6 @@ export const AnalyticsClient: React.FC = () => {
         </div>
 
         <div className="gutter gutter--left gutter--right" style={{
-          background: 'var(--theme-elevation-100)',
           border: '1px solid var(--theme-elevation-200)',
           borderRadius: 'var(--border-radius-m)',
           padding: 'calc(var(--base) * 1.5)'
@@ -242,7 +248,6 @@ export const AnalyticsClient: React.FC = () => {
         </div>
 
         <div className="gutter gutter--left gutter--right" style={{
-          background: 'var(--theme-elevation-100)',
           border: '1px solid var(--theme-elevation-200)',
           borderRadius: 'var(--border-radius-m)',
           padding: 'calc(var(--base) * 1.5)'
@@ -271,7 +276,6 @@ export const AnalyticsClient: React.FC = () => {
         </div>
 
         <div className="gutter gutter--left gutter--right" style={{
-          background: 'var(--theme-elevation-100)',
           border: '1px solid var(--theme-elevation-200)',
           borderRadius: 'var(--border-radius-m)',
           padding: 'calc(var(--base) * 1.5)'
@@ -309,7 +313,6 @@ export const AnalyticsClient: React.FC = () => {
           margin: '0 0 1.5rem 0'
         }}>Visitors Over Time</h3>
         <div className="gutter gutter--left gutter--right" style={{
-          background: 'var(--theme-elevation-100)',
           border: '1px solid var(--theme-elevation-200)',
           borderRadius: 'var(--border-radius-m)',
           padding: 'calc(var(--base) * 1.5)'
@@ -343,8 +346,8 @@ export const AnalyticsClient: React.FC = () => {
                 />
                 <Tooltip
                   contentStyle={{
-                    backgroundColor: 'var(--theme-elevation-900)',
-                    border: '1px solid var(--theme-elevation-700)',
+                    backgroundColor: 'var(--theme-elevation-50)',
+                    border: '1px solid var(--theme-elevation-150)',
                     borderRadius: 'var(--border-radius-s)',
                     color: 'var(--theme-text)',
                     padding: '8px 12px',
@@ -352,11 +355,13 @@ export const AnalyticsClient: React.FC = () => {
                     boxShadow: 'var(--shadow-lg)'
                   }}
                   labelStyle={{
-                    color: 'var(--theme-text-light)',
-                    marginBottom: '4px'
+                    color: 'var(--theme-text)',
+                    marginBottom: '4px',
+                    fontWeight: '600'
                   }}
                   itemStyle={{
-                    color: 'var(--theme-text)'
+                    color: 'var(--theme-text)',
+                    padding: '2px 0'
                   }}
                   labelFormatter={(value) => formatTooltipDate(value, period)}
                   formatter={(value: number) => [`${formatNumber(value)} visitors`, '']}
@@ -385,7 +390,6 @@ export const AnalyticsClient: React.FC = () => {
         gap: '2rem'
       }}>
         <div className="gutter gutter--left gutter--right" style={{
-          background: 'var(--theme-elevation-100)',
           border: '1px solid var(--theme-elevation-200)',
           borderRadius: 'var(--border-radius-m)',
           padding: 'calc(var(--base) * 1.5)'
@@ -421,7 +425,6 @@ export const AnalyticsClient: React.FC = () => {
         </div>
 
         <div className="gutter gutter--left gutter--right" style={{
-          background: 'var(--theme-elevation-100)',
           border: '1px solid var(--theme-elevation-200)',
           borderRadius: 'var(--border-radius-m)',
           padding: 'calc(var(--base) * 1.5)'

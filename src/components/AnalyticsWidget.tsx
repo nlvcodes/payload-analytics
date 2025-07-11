@@ -25,7 +25,7 @@ export const AnalyticsWidget: React.FC = () => {
     <div style={{
       background: 'var(--theme-elevation-100)',
       border: '1px solid var(--theme-elevation-200)',
-      borderRadius: '8px',
+      borderRadius: 'var(--border-radius-m)',
       padding: '1.5rem',
       marginBottom: '2rem',
     }}>
