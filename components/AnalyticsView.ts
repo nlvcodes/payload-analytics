@@ -1,1 +1,1 @@
-export { AnalyticsView as default } from '../src/components/AnalyticsView'
+export { AnalyticsView as default } from '../dist/components/AnalyticsView'

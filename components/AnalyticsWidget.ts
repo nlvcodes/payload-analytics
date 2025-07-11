@@ -1,1 +1,1 @@
-export { AnalyticsWidget as default } from '../src/components/AnalyticsWidget'
+export { AnalyticsWidget as default } from '../dist/components/AnalyticsWidget'

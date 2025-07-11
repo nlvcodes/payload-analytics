@@ -1,1 +1,1 @@
-export { AfterNavLinks as default } from '../src/components/AfterNavLinksServer'
+export { AfterNavLinks as default } from '../dist/components/AfterNavLinksServer'
