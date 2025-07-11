@@ -9,7 +9,7 @@
     "README.md"
   ],
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && cp src/components/Analytics.css dist/components/",
     "dev": "tsc --watch",
     "test": "vitest",
     "test:run": "vitest run",
