@@ -6,9 +6,11 @@ import Link from 'next/link'
 interface AfterNavLinksClientProps {
   provider: string
   useGenericIcon?: boolean
+  dashboardPath: string
+  adminRoute: string
 }
 
-export const AfterNavLinksClient: React.FC<AfterNavLinksClientProps> = ({ provider, useGenericIcon }) => {
+export const AfterNavLinksClient: React.FC<AfterNavLinksClientProps> = ({ provider, useGenericIcon, dashboardPath, adminRoute }) => {
   const linkStyle = {
     display: 'flex',
     alignItems: 'center',
@@ -24,7 +26,7 @@ export const AfterNavLinksClient: React.FC<AfterNavLinksClientProps> = ({ provid
   React.useEffect(() => {
     const style = document.createElement('style')
     style.textContent = `
-      .nav-group a[href="/admin/analytics"]:not(.custom-analytics-link) {
+      .nav-group a[href="${adminRoute}${dashboardPath}"]:not(.custom-analytics-link) {
         display: none !important;
       }
     `
@@ -32,7 +34,7 @@ export const AfterNavLinksClient: React.FC<AfterNavLinksClientProps> = ({ provid
     return () => {
       document.head.removeChild(style)
     }
-  }, [])
+  }, [adminRoute, dashboardPath])
 
   const getAnalyticsIcon = () => {
     // Use generic icon if requested
@@ -146,7 +148,7 @@ export const AfterNavLinksClient: React.FC<AfterNavLinksClientProps> = ({ provid
   return (
     <div className="nav-group">
       <Link
-        href="/admin/analytics"
+        href={`${adminRoute}${dashboardPath}`}
         className="nav-link custom-analytics-link"
         style={linkStyle}
         onMouseEnter={(e: React.MouseEvent<HTMLAnchorElement>) => {

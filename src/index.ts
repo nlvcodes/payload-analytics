@@ -101,6 +101,8 @@ export const analyticsPlugin = (pluginConfig: AnalyticsPluginConfig | LegacyAnal
   ;(global as any).__analyticsDefaultTimePeriod = defaultTimePeriod
   ;(global as any).__analyticsComparisonOptions = comparisonOptions
   ;(global as any).__analyticsEnableComparison = enableComparison
+  ;(global as any).__analyticsDashboardPath = dashboardPath
+  ;(global as any).__adminRoute = '/admin' // Default admin route
 
   const updatedConfig: Config = {
     ...config,
