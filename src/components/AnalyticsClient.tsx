@@ -59,100 +59,21 @@ export const AnalyticsClient: React.FC = () => {
         background-color: #10b981;
         border-radius: 50%;
         animation: pulse 2s infinite;
+        display: inline-block;
+        vertical-align: middle;
+        margin-right: 0.5rem;
       }
-      .analytics-controls {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 2rem;
-        flex-wrap: wrap;
-        gap: 1rem;
+      .analytics-period-field {
+        margin-bottom: 0;
       }
-      .analytics-period-selector {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-      }
-      .analytics-period-selector label {
-        font-weight: 500;
-        color: var(--theme-text);
-      }
-      .analytics-realtime {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        color: var(--theme-text-light);
-        font-size: 0.875rem;
-      }
-      .analytics-stats-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 1.5rem;
-        margin-bottom: 3rem;
-      }
-      .analytics-stat-card {
-        background: var(--theme-elevation-100);
-        border: 1px solid var(--theme-elevation-200);
-        border-radius: var(--border-radius-m);
-        padding: var(--spacing-field);
-      }
-      .analytics-stat-card h3 {
-        font-size: 0.875rem;
-        font-weight: 500;
-        color: var(--theme-text-light);
-        margin: 0 0 0.5rem 0;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-      }
-      .analytics-stat-value {
-        font-size: 2rem;
-        font-weight: 600;
-        color: var(--theme-text);
+      .analytics-period-field .field-label {
         margin-bottom: 0.5rem;
-      }
-      .analytics-stat-change {
-        font-size: 0.875rem;
-        color: var(--theme-text-light);
       }
       .analytics-stat-change.positive {
         color: var(--theme-success-600);
       }
       .analytics-stat-change.negative {
         color: var(--theme-error-600);
-      }
-      .analytics-charts {
-        display: flex;
-        flex-direction: column;
-        gap: 3rem;
-      }
-      .analytics-chart-title {
-        font-size: 1.125rem;
-        font-weight: 600;
-        color: var(--theme-text);
-        margin: 0 0 1.5rem 0;
-      }
-      .analytics-timeseries {
-        background: var(--theme-elevation-100);
-        border: 1px solid var(--theme-elevation-200);
-        border-radius: var(--border-radius-m);
-        padding: var(--spacing-field);
-      }
-      .analytics-tables {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-        gap: 2rem;
-      }
-      .analytics-table-section {
-        background: var(--theme-elevation-100);
-        border: 1px solid var(--theme-elevation-200);
-        border-radius: var(--border-radius-m);
-        padding: var(--spacing-field);
-      }
-      .analytics-table-section h3 {
-        font-size: 1rem;
-        font-weight: 600;
-        color: var(--theme-text);
-        margin: 0 0 1rem 0;
       }
       .analytics-table {
         width: 100%;
@@ -162,12 +83,12 @@ export const AnalyticsClient: React.FC = () => {
         text-align: left;
         font-weight: 500;
         color: var(--theme-text-light);
-        padding: 0.5rem 0;
+        padding: 0.75rem 1rem;
         border-bottom: 1px solid var(--theme-elevation-200);
         font-size: 0.875rem;
       }
       .analytics-table td {
-        padding: 0.75rem 0;
+        padding: 0.75rem 1rem;
         color: var(--theme-text);
         font-size: 0.875rem;
         border-bottom: 1px solid var(--theme-elevation-100);
@@ -217,133 +138,266 @@ export const AnalyticsClient: React.FC = () => {
 
   return (
     <div>
-      <div className="analytics-controls">
-        <div className="analytics-period-selector">
-          <label>Time Period:</label>
-          <select
-            value={period}
-            onChange={(e) => setPeriod(e.target.value as TimePeriod)}
-            className="payload__select"
-          >
-            {timePeriods.map((tp: TimePeriod) => (
-              <option key={tp} value={tp}>
-                {TIME_PERIOD_LABELS[tp] || tp}
-              </option>
-            ))}
-          </select>
+      {/* Controls */}
+      <div style={{ 
+        display: 'flex', 
+        justifyContent: 'space-between', 
+        alignItems: 'flex-end', 
+        marginBottom: '2rem',
+        flexWrap: 'wrap',
+        gap: '1rem'
+      }}>
+        <div className="field-type select analytics-period-field" style={{ maxWidth: '300px', flex: '0 1 auto' }}>
+          <label className="field-label" htmlFor="analytics-period">Time Period</label>
+          <div className="field-type__wrap">
+            <select
+              id="analytics-period"
+              value={period}
+              onChange={(e) => setPeriod(e.target.value as TimePeriod)}
+              className="payload__select"
+              style={{ width: '100%' }}
+            >
+              {timePeriods.map((tp: TimePeriod) => (
+                <option key={tp} value={tp}>
+                  {TIME_PERIOD_LABELS[tp] || tp}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
-        <div className="analytics-realtime">
+        <div style={{ 
+          display: 'flex', 
+          alignItems: 'center',
+          color: 'var(--theme-text-light)',
+          fontSize: '0.875rem'
+        }}>
           <span className="analytics-realtime-dot"></span>
           <span>{realtime.visitors} visitor{realtime.visitors !== 1 ? 's' : ''} online now</span>
         </div>
       </div>
 
-      <div className="analytics-stats-grid">
-        <div className="analytics-stat-card">
-          <h3>Visitors</h3>
-          <div className="analytics-stat-value">{formatNumber(stats.visitors.value)}</div>
+      {/* Stats Cards */}
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+        gap: '1.5rem',
+        marginBottom: '3rem'
+      }}>
+        <div className="gutter gutter--left gutter--right" style={{
+          background: 'var(--theme-elevation-100)',
+          border: '1px solid var(--theme-elevation-200)',
+          borderRadius: 'var(--border-radius-m)',
+          padding: 'calc(var(--base) * 1.5)'
+        }}>
+          <h3 style={{
+            fontSize: '0.875rem',
+            fontWeight: 500,
+            color: 'var(--theme-text-light)',
+            margin: '0 0 0.5rem 0',
+            textTransform: 'uppercase',
+            letterSpacing: '0.05em'
+          }}>Visitors</h3>
+          <div style={{
+            fontSize: '2rem',
+            fontWeight: 600,
+            color: 'var(--theme-text)',
+            marginBottom: '0.5rem'
+          }}>{formatNumber(stats.visitors.value)}</div>
           {enableComparison && (
-            <div className={`analytics-stat-change ${stats.visitors.change && stats.visitors.change > 0 ? 'positive' : 'negative'}`}>
+            <div className={`analytics-stat-change ${stats.visitors.change && stats.visitors.change > 0 ? 'positive' : 'negative'}`} style={{
+              fontSize: '0.875rem'
+            }}>
               {formatChange(stats.visitors.change).text} from previous period
             </div>
           )}
         </div>
 
-        <div className="analytics-stat-card">
-          <h3>Pageviews</h3>
-          <div className="analytics-stat-value">{formatNumber(stats.pageviews.value)}</div>
+        <div className="gutter gutter--left gutter--right" style={{
+          background: 'var(--theme-elevation-100)',
+          border: '1px solid var(--theme-elevation-200)',
+          borderRadius: 'var(--border-radius-m)',
+          padding: 'calc(var(--base) * 1.5)'
+        }}>
+          <h3 style={{
+            fontSize: '0.875rem',
+            fontWeight: 500,
+            color: 'var(--theme-text-light)',
+            margin: '0 0 0.5rem 0',
+            textTransform: 'uppercase',
+            letterSpacing: '0.05em'
+          }}>Pageviews</h3>
+          <div style={{
+            fontSize: '2rem',
+            fontWeight: 600,
+            color: 'var(--theme-text)',
+            marginBottom: '0.5rem'
+          }}>{formatNumber(stats.pageviews.value)}</div>
           {enableComparison && (
-            <div className={`analytics-stat-change ${stats.pageviews.change && stats.pageviews.change > 0 ? 'positive' : 'negative'}`}>
+            <div className={`analytics-stat-change ${stats.pageviews.change && stats.pageviews.change > 0 ? 'positive' : 'negative'}`} style={{
+              fontSize: '0.875rem'
+            }}>
               {formatChange(stats.pageviews.change).text} from previous period
             </div>
           )}
         </div>
 
-        <div className="analytics-stat-card">
-          <h3>Bounce Rate</h3>
-          <div className="analytics-stat-value">{formatPercentage(stats.bounce_rate.value)}</div>
+        <div className="gutter gutter--left gutter--right" style={{
+          background: 'var(--theme-elevation-100)',
+          border: '1px solid var(--theme-elevation-200)',
+          borderRadius: 'var(--border-radius-m)',
+          padding: 'calc(var(--base) * 1.5)'
+        }}>
+          <h3 style={{
+            fontSize: '0.875rem',
+            fontWeight: 500,
+            color: 'var(--theme-text-light)',
+            margin: '0 0 0.5rem 0',
+            textTransform: 'uppercase',
+            letterSpacing: '0.05em'
+          }}>Bounce Rate</h3>
+          <div style={{
+            fontSize: '2rem',
+            fontWeight: 600,
+            color: 'var(--theme-text)',
+            marginBottom: '0.5rem'
+          }}>{formatPercentage(stats.bounce_rate.value)}</div>
           {enableComparison && (
-            <div className={`analytics-stat-change ${stats.bounce_rate.change && stats.bounce_rate.change < 0 ? 'positive' : 'negative'}`}>
+            <div className={`analytics-stat-change ${stats.bounce_rate.change && stats.bounce_rate.change < 0 ? 'positive' : 'negative'}`} style={{
+              fontSize: '0.875rem'
+            }}>
               {formatChange(stats.bounce_rate.change).text} from previous period
             </div>
           )}
         </div>
 
-        <div className="analytics-stat-card">
-          <h3>Visit Duration</h3>
-          <div className="analytics-stat-value">{formatDuration(stats.visit_duration.value)}</div>
+        <div className="gutter gutter--left gutter--right" style={{
+          background: 'var(--theme-elevation-100)',
+          border: '1px solid var(--theme-elevation-200)',
+          borderRadius: 'var(--border-radius-m)',
+          padding: 'calc(var(--base) * 1.5)'
+        }}>
+          <h3 style={{
+            fontSize: '0.875rem',
+            fontWeight: 500,
+            color: 'var(--theme-text-light)',
+            margin: '0 0 0.5rem 0',
+            textTransform: 'uppercase',
+            letterSpacing: '0.05em'
+          }}>Visit Duration</h3>
+          <div style={{
+            fontSize: '2rem',
+            fontWeight: 600,
+            color: 'var(--theme-text)',
+            marginBottom: '0.5rem'
+          }}>{formatDuration(stats.visit_duration.value)}</div>
           {enableComparison && (
-            <div className={`analytics-stat-change ${stats.visit_duration.change && stats.visit_duration.change > 0 ? 'positive' : 'negative'}`}>
+            <div className={`analytics-stat-change ${stats.visit_duration.change && stats.visit_duration.change > 0 ? 'positive' : 'negative'}`} style={{
+              fontSize: '0.875rem'
+            }}>
               {formatChange(stats.visit_duration.change).text} from previous period
             </div>
           )}
         </div>
       </div>
 
-      <div className="analytics-charts">
-        <div>
-          <h3 className="analytics-chart-title">Visitors Over Time</h3>
-          <div className="analytics-timeseries">
-            {timeseries.length > 0 ? (
-              <ResponsiveContainer width="100%" height={250}>
-                <AreaChart
-                  data={timeseries}
-                  margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
-                >
-                  <defs>
-                    <linearGradient id="colorVisitors" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="var(--theme-success-600)" stopOpacity={0.3} />
-                      <stop offset="95%" stopColor="var(--theme-success-600)" stopOpacity={0.05} />
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid strokeDasharray="3 3" stroke="var(--theme-elevation-200)" />
-                  <XAxis
-                    dataKey="date"
-                    tickFormatter={(value, index) => formatAxisDate(value, period)}
-                    stroke="var(--theme-text-light)"
-                    style={{ fontSize: '0.75rem' }}
-                    tick={{ fill: 'var(--theme-text-light)' }}
-                    interval="preserveStartEnd"
-                  />
-                  <YAxis
-                    stroke="var(--theme-text-light)"
-                    style={{ fontSize: '0.75rem' }}
-                    tick={{ fill: 'var(--theme-text-light)' }}
-                    tickFormatter={formatNumber}
-                  />
-                  <Tooltip
-                    contentStyle={{
-                      backgroundColor: 'var(--theme-elevation-1000)',
-                      border: 'none',
-                      borderRadius: 'var(--border-radius-s)',
-                      color: 'white',
-                      padding: '8px 12px',
-                      fontSize: '0.875rem',
-                    }}
-                    labelFormatter={(value) => formatTooltipDate(value, period)}
-                    formatter={(value: number) => [`${formatNumber(value)} visitors`]}
-                    separator=""
-                  />
-                  <Area
-                    type="monotone"
-                    dataKey="visitors"
-                    stroke="var(--theme-success-600)"
-                    strokeWidth={2}
-                    fillOpacity={1}
-                    fill="url(#colorVisitors)"
-                  />
-                </AreaChart>
-              </ResponsiveContainer>
-            ) : (
-              <p>No data available for this period</p>
-            )}
-          </div>
+      {/* Chart Section */}
+      <div style={{ marginBottom: '3rem' }}>
+        <h3 style={{
+          fontSize: '1.125rem',
+          fontWeight: 600,
+          color: 'var(--theme-text)',
+          margin: '0 0 1.5rem 0'
+        }}>Visitors Over Time</h3>
+        <div className="gutter gutter--left gutter--right" style={{
+          background: 'var(--theme-elevation-100)',
+          border: '1px solid var(--theme-elevation-200)',
+          borderRadius: 'var(--border-radius-m)',
+          padding: 'calc(var(--base) * 1.5)'
+        }}>
+          {timeseries.length > 0 ? (
+            <ResponsiveContainer width="100%" height={250}>
+              <AreaChart
+                data={timeseries}
+                margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+              >
+                <defs>
+                  <linearGradient id="colorVisitors" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="var(--theme-success-600)" stopOpacity={0.3} />
+                    <stop offset="95%" stopColor="var(--theme-success-600)" stopOpacity={0.05} />
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" stroke="var(--theme-elevation-200)" />
+                <XAxis
+                  dataKey="date"
+                  tickFormatter={(value, index) => formatAxisDate(value, period)}
+                  stroke="var(--theme-text-light)"
+                  style={{ fontSize: '0.75rem' }}
+                  tick={{ fill: 'var(--theme-text-light)' }}
+                  interval="preserveStartEnd"
+                />
+                <YAxis
+                  stroke="var(--theme-text-light)"
+                  style={{ fontSize: '0.75rem' }}
+                  tick={{ fill: 'var(--theme-text-light)' }}
+                  tickFormatter={formatNumber}
+                />
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: 'var(--theme-elevation-900)',
+                    border: '1px solid var(--theme-elevation-700)',
+                    borderRadius: 'var(--border-radius-s)',
+                    color: 'var(--theme-text)',
+                    padding: '8px 12px',
+                    fontSize: '0.875rem',
+                    boxShadow: 'var(--shadow-lg)'
+                  }}
+                  labelStyle={{
+                    color: 'var(--theme-text-light)',
+                    marginBottom: '4px'
+                  }}
+                  itemStyle={{
+                    color: 'var(--theme-text)'
+                  }}
+                  labelFormatter={(value) => formatTooltipDate(value, period)}
+                  formatter={(value: number) => [`${formatNumber(value)} visitors`, '']}
+                  separator=""
+                />
+                <Area
+                  type="monotone"
+                  dataKey="visitors"
+                  stroke="var(--theme-success-600)"
+                  strokeWidth={2}
+                  fillOpacity={1}
+                  fill="url(#colorVisitors)"
+                />
+              </AreaChart>
+            </ResponsiveContainer>
+          ) : (
+            <p>No data available for this period</p>
+          )}
         </div>
+      </div>
 
-        <div className="analytics-tables">
-          <div className="analytics-table-section">
-            <h3>Top Pages</h3>
-            <table className="analytics-table">
+      {/* Tables */}
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))',
+        gap: '2rem'
+      }}>
+        <div className="gutter gutter--left gutter--right" style={{
+          background: 'var(--theme-elevation-100)',
+          border: '1px solid var(--theme-elevation-200)',
+          borderRadius: 'var(--border-radius-m)',
+          padding: 'calc(var(--base) * 1.5)'
+        }}>
+          <h3 style={{
+            fontSize: '1rem',
+            fontWeight: 600,
+            color: 'var(--theme-text)',
+            margin: '0 0 1rem 0'
+          }}>Top Pages</h3>
+          <div className="table">
+            <table className="analytics-table" cellPadding="0" cellSpacing="0">
               <thead>
               <tr>
                 <th>Page</th>
@@ -364,10 +418,22 @@ export const AnalyticsClient: React.FC = () => {
               </tbody>
             </table>
           </div>
+        </div>
 
-          <div className="analytics-table-section">
-            <h3>Top Sources</h3>
-            <table className="analytics-table">
+        <div className="gutter gutter--left gutter--right" style={{
+          background: 'var(--theme-elevation-100)',
+          border: '1px solid var(--theme-elevation-200)',
+          borderRadius: 'var(--border-radius-m)',
+          padding: 'calc(var(--base) * 1.5)'
+        }}>
+          <h3 style={{
+            fontSize: '1rem',
+            fontWeight: 600,
+            color: 'var(--theme-text)',
+            margin: '0 0 1rem 0'
+          }}>Top Sources</h3>
+          <div className="table">
+            <table className="analytics-table" cellPadding="0" cellSpacing="0">
               <thead>
               <tr>
                 <th>Source</th>
@@ -388,11 +454,23 @@ export const AnalyticsClient: React.FC = () => {
               </tbody>
             </table>
           </div>
+        </div>
 
-          {events.length > 0 && (
-            <div className="analytics-table-section">
-              <h3>Top Events</h3>
-              <table className="analytics-table">
+        {events.length > 0 && (
+          <div className="gutter gutter--left gutter--right" style={{
+            background: 'var(--theme-elevation-100)',
+            border: '1px solid var(--theme-elevation-200)',
+            borderRadius: 'var(--border-radius-m)',
+            padding: 'calc(var(--base) * 1.5)'
+          }}>
+            <h3 style={{
+              fontSize: '1rem',
+              fontWeight: 600,
+              color: 'var(--theme-text)',
+              margin: '0 0 1rem 0'
+            }}>Top Events</h3>
+            <div className="table">
+              <table className="analytics-table" cellPadding="0" cellSpacing="0">
                 <thead>
                 <tr>
                   <th>Event</th>
@@ -409,8 +487,8 @@ export const AnalyticsClient: React.FC = () => {
                 </tbody>
               </table>
             </div>
-          )}
-        </div>
+          </div>
+        )}
       </div>
     </div>
   )
