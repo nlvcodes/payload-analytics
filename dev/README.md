@@ -14,18 +14,23 @@ This is a local development environment for testing the Payload Analytics Plugin
    pnpm install
    ```
 
-3. Start the development server:
+3. Build the parent plugin first:
+   ```bash
+   cd ..
+   pnpm build
+   cd dev
+   ```
+
+4. Start the development server:
    ```bash
    pnpm dev
    ```
 
-4. Open http://localhost:3000/admin in your browser
+5. Open http://localhost:3000/admin in your browser
 
-5. Login with:
-   - Email: dev@payloadcms.com
-   - Password: test
+6. Create a user account or use the auto-login if configured
 
-6. Click on "Analytics" in the navigation to view the dashboard
+7. Click on "Analytics" in the navigation to view the dashboard
 
 ## Testing Different Providers
 

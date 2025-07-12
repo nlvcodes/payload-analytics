@@ -12,10 +12,26 @@ export default buildConfig({
   editor: lexicalEditor({}),
   admin: {
     user: 'users',
-    // autoLogin: {
-    //   email: 'dev@payloadcms.com',
-    //   password: 'test',
-    // },
+    autoLogin: {
+      email: 'dev@payloadcms.com',
+      password: 'test',
+    },
+  },
+  onInit: async (payload) => {
+    const users = await payload.find({
+      collection: 'users',
+      limit: 0
+    }).then(res => res.docs)
+
+    if (users.length < 1) {
+      await payload.create({
+        collection: 'users',
+        data: {
+          email: 'dev@payloadcms.com',
+          password: 'test'
+        }
+      })
+    }
   },
   collections: [
     {
