@@ -77,6 +77,11 @@ export const AnalyticsClient: React.FC = () => {
         border-radius: var(--style-radius-m);
         padding: calc(var(--base) * 1.5);
       }
+      .table-card {
+        border: 1px solid var(--theme-elevation-200);
+        border-radius: var(--style-radius-m);
+        padding: calc(var(--base) * 1.5);
+      }
       .analytics-period-field {
         margin-bottom: 0;
       }
@@ -372,7 +377,7 @@ export const AnalyticsClient: React.FC = () => {
         gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))',
         gap: '2rem'
       }}>
-        <div className="card" style={{ flexDirection: 'column' }}>
+        <div className="table-card">
           <h3 style={{
             fontSize: '1rem',
             fontWeight: 600,
@@ -403,7 +408,7 @@ export const AnalyticsClient: React.FC = () => {
           </div>
         </div>
 
-        <div className="card" style={{ flexDirection: 'column' }}>
+        <div className="table-card">
           <h3 style={{
             fontSize: '1rem',
             fontWeight: 600,
@@ -435,12 +440,7 @@ export const AnalyticsClient: React.FC = () => {
         </div>
 
         {events.length > 0 && (
-          <div className="gutter gutter--left gutter--right" style={{
-            background: 'var(--theme-elevation-100)',
-            border: '1px solid var(--theme-elevation-200)',
-            borderRadius: 'var(--border-radius-m)',
-            padding: 'calc(var(--base) * 1.5)'
-          }}>
+          <div className="table-card">
             <h3 style={{
               fontSize: '1rem',
               fontWeight: 600,

@@ -51,19 +51,21 @@ export const AnalyticsView: React.FC<AdminViewServerProps> = ({ initPageResult, 
     visibleEntities={initPageResult.visibleEntities}
   >
     <SetStepNav nav={navItems} />
-    <Gutter>
-      <h1>Analytics Dashboard</h1>
-      <script
-        dangerouslySetInnerHTML={{
-          __html: `
-            window.__analyticsTimePeriods = ${JSON.stringify(timePeriods)};
-            window.__analyticsDefaultTimePeriod = ${JSON.stringify(defaultTimePeriod)};
-            window.__analyticsEnableComparison = ${JSON.stringify(enableComparison)};
-          `,
-        }}
-      />
-      <AnalyticsClient />
-    </Gutter>
+    <div style={{ marginBottom: 'calc(var(--base) * 3)' }}>
+      <Gutter>
+        <h1>Analytics Dashboard</h1>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.__analyticsTimePeriods = ${JSON.stringify(timePeriods)};
+              window.__analyticsDefaultTimePeriod = ${JSON.stringify(defaultTimePeriod)};
+              window.__analyticsEnableComparison = ${JSON.stringify(enableComparison)};
+            `,
+          }}
+        />
+        <AnalyticsClient />
+      </Gutter>
+    </div>
   </DefaultTemplate>
 }
 
