@@ -136,7 +136,14 @@ export const analyticsPlugin = (pluginConfig: AnalyticsPluginConfig | LegacyAnal
     endpoints: [
       ...(config.endpoints || []),
       {
-        path: '/api/analytics/dashboard',
+        path: '/test',
+        method: 'get',
+        handler: async (req) => {
+          return Response.json({ message: 'Test endpoint works!' })
+        },
+      },
+      {
+        path: '/analytics/dashboard',
         method: 'get',
         handler: async (req) => {
           const provider = (global as any).__analyticsProvider as AnalyticsProvider
