@@ -71,6 +71,41 @@ export const AnalyticsClient: React.FC = () => {
         vertical-align: middle;
         margin-right: 0.5rem;
       }
+      .analytics-period-selector {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      .analytics-period-selector label {
+        font-weight: 500;
+        color: var(--theme-text);
+      }
+      .analytics-period-selector .payload-select {
+        padding: 0.5rem 2rem 0.5rem 1rem;
+        border: 1px solid var(--theme-elevation-200);
+        border-radius: var(--style-radius-s);
+        background-color: var(--theme-elevation-0);
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23999' d='M10.293 3.293L6 7.586 1.707 3.293A1 1 0 00.293 4.707l5 5a1 1 0 001.414 0l5-5a1 1 0 10-1.414-1.414z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 0.75rem center;
+        background-size: 12px;
+        color: var(--theme-text);
+        font-size: var(--font-size-small);
+        font-family: var(--font-family);
+        line-height: var(--line-height-s);
+        cursor: pointer;
+        appearance: none;
+        transition: all var(--transition-duration-default) var(--transition-timing-default);
+      }
+      .analytics-period-selector .payload-select:hover {
+        border-color: var(--theme-elevation-300);
+        background-color: var(--theme-elevation-50);
+      }
+      .analytics-period-selector .payload-select:focus {
+        outline: none;
+        border-color: var(--theme-success-500);
+        box-shadow: 0 0 0 3px var(--theme-success-100);
+      }
       .card {
         background: var(--theme-elevation-100);
         border: 1px solid var(--theme-elevation-200);
@@ -161,28 +196,25 @@ export const AnalyticsClient: React.FC = () => {
       <div style={{ 
         display: 'flex', 
         justifyContent: 'space-between', 
-        alignItems: 'flex-end', 
+        alignItems: 'center', 
         marginBottom: '2rem',
         flexWrap: 'wrap',
         gap: '1rem'
       }}>
-        <div className="field-type select analytics-period-field" style={{ maxWidth: '300px', flex: '0 1 auto' }}>
-          <label className="field-label" htmlFor="analytics-period">Time Period</label>
-          <div className="field-type__wrap">
-            <select
-              id="analytics-period"
-              value={period}
-              onChange={(e) => setPeriod(e.target.value as TimePeriod)}
-              className="payload__select"
-              style={{ width: '100%' }}
-            >
-              {timePeriods.map((tp: TimePeriod) => (
-                <option key={tp} value={tp}>
-                  {TIME_PERIOD_LABELS[tp] || tp}
-                </option>
-              ))}
-            </select>
-          </div>
+        <div className="analytics-period-selector">
+          <label htmlFor="analytics-period">Time Period:</label>
+          <select
+            id="analytics-period"
+            value={period}
+            onChange={(e) => setPeriod(e.target.value as TimePeriod)}
+            className="payload-select"
+          >
+            {timePeriods.map((tp: TimePeriod) => (
+              <option key={tp} value={tp}>
+                {TIME_PERIOD_LABELS[tp] || tp}
+              </option>
+            ))}
+          </select>
         </div>
         <div style={{ 
           display: 'flex', 
