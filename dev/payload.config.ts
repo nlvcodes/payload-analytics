@@ -3,18 +3,19 @@ import { buildConfig } from 'payload'
 import { analyticsPlugin } from 'payload-analytics-plugin'
 import { fileURLToPath } from 'url'
 import path from 'path'
+import {lexicalEditor} from '@payloadcms/richtext-lexical'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
 export default buildConfig({
+  editor: lexicalEditor({}),
   admin: {
     user: 'users',
-    autoLogin: {
-      email: 'dev@payloadcms.com',
-      password: 'test',
-      prefillOnly: true,
-    },
+    // autoLogin: {
+    //   email: 'dev@payloadcms.com',
+    //   password: 'test',
+    // },
   },
   collections: [
     {

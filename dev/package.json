@@ -6,18 +6,18 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
-    "generate:types": "payload generate:types"
+    "start": "next start"
   },
   "dependencies": {
     "@payloadcms/db-mongodb": "^3.0.0",
     "@payloadcms/next": "^3.0.0",
+    "@payloadcms/richtext-lexical": "^3.0.0",
     "@payloadcms/ui": "^3.0.0",
     "next": "^15.0.0",
     "payload": "^3.0.0",
+    "payload-analytics-plugin": "file:../",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "payload-analytics-plugin": "file:../"
+    "react-dom": "^19.0.0"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",
