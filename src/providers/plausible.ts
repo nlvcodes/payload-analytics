@@ -111,15 +111,28 @@ export function createPlausibleProvider(config: PlausibleConfig): AnalyticsProvi
       }
 
       try {
+        // Handle custom date ranges
+        let apiParams: Record<string, string> = { metrics: 'visitors,pageviews,bounce_rate,visit_duration' }
+        
+        if (period.includes(',')) {
+          // Custom date range format: "YYYY-MM-DD,YYYY-MM-DD"
+          const [start, end] = period.split(',')
+          apiParams.period = 'custom'
+          apiParams.date = `${start},${end}`
+        } else {
+          apiParams.period = period
+          apiParams.compare = 'previous_period'
+        }
+
         const [statsResponse, timeseries, pages, sources, events, realtime] = await Promise.all([
-          fetchPlausibleAPI(apiConfig, 'aggregate', { period, metrics: 'visitors,pageviews,bounce_rate,visit_duration', compare: 'previous_period' }, StatsSchema),
-          fetchPlausibleAPI(apiConfig, 'timeseries', { period, metrics: 'visitors' }, z.object({ results: z.array(TimePeriodSchema) }))
+          fetchPlausibleAPI(apiConfig, 'aggregate', apiParams, StatsSchema),
+          fetchPlausibleAPI(apiConfig, 'timeseries', { ...apiParams, metrics: 'visitors' }, z.object({ results: z.array(TimePeriodSchema) }))
             .then(data => data?.results || []),
-          fetchPlausibleAPI(apiConfig, 'breakdown', { period, property: 'event:page', limit: '10', metrics: 'visitors,pageviews,bounce_rate,visit_duration' }, z.object({ results: z.array(PageSchema) }))
+          fetchPlausibleAPI(apiConfig, 'breakdown', { ...apiParams, property: 'event:page', limit: '10', metrics: 'visitors,pageviews,bounce_rate,visit_duration' }, z.object({ results: z.array(PageSchema) }))
             .then(data => data?.results || []),
-          fetchPlausibleAPI(apiConfig, 'breakdown', { period, property: 'visit:source', limit: '10', metrics: 'visitors,bounce_rate,visit_duration' }, z.object({ results: z.array(SourceSchema) }))
+          fetchPlausibleAPI(apiConfig, 'breakdown', { ...apiParams, property: 'visit:source', limit: '10', metrics: 'visitors,bounce_rate,visit_duration' }, z.object({ results: z.array(SourceSchema) }))
             .then(data => data?.results || []),
-          fetchPlausibleAPI(apiConfig, 'breakdown', { period, property: 'event:goal', limit: '10', metrics: 'visitors,events,conversion_rate' }, z.object({ results: z.array(EventSchema) }))
+          fetchPlausibleAPI(apiConfig, 'breakdown', { ...apiParams, property: 'event:goal', limit: '10', metrics: 'visitors,events,conversion_rate' }, z.object({ results: z.array(EventSchema) }))
             .then(data => data?.results || [])
             .catch((err) => {
               console.warn('Failed to fetch events/goals:', err)

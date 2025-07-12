@@ -27,7 +27,7 @@ export const AnalyticsClient: React.FC = () => {
   const [period, setPeriod] = useState<TimePeriod>(defaultTimePeriod)
   const [showCustomDatePicker, setShowCustomDatePicker] = useState(false)
   const [customStartDate, setCustomStartDate] = useState('')
-  const [customEndDate, setCustomEndDate] = useState('')
+  const [customEndDate, setCustomEndDate] = useState(new Date().toISOString().split('T')[0])
 
   useEffect(() => {
     const fetchData = async () => {
