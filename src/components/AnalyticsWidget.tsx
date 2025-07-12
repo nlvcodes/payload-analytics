@@ -8,6 +8,23 @@ export const AnalyticsWidget: React.FC = () => {
   const [data, setData] = useState<DashboardData | null>(null)
   const [loading, setLoading] = useState(true)
 
+  // Add styles
+  useEffect(() => {
+    const style = document.createElement('style')
+    style.textContent = `
+      .card {
+        background: var(--theme-elevation-100);
+        border: 1px solid var(--theme-elevation-200);
+        border-radius: var(--style-radius-m);
+        padding: calc(var(--base) * 1.5);
+      }
+    `
+    document.head.appendChild(style)
+    return () => {
+      document.head.removeChild(style)
+    }
+  }, [])
+
   useEffect(() => {
     // Widget always shows today's data
     fetch('/api/analytics/dashboard?period=day')
@@ -22,13 +39,7 @@ export const AnalyticsWidget: React.FC = () => {
   }
 
   return (
-    <div style={{
-      background: 'var(--theme-elevation-100)',
-      border: '1px solid var(--theme-elevation-200)',
-      borderRadius: 'var(--border-radius-m)',
-      padding: '1.5rem',
-      marginBottom: '2rem',
-    }}>
+    <div className="card" style={{ marginBottom: '2rem' }}>
       <h3 style={{ 
         fontSize: '1rem', 
         fontWeight: '600', 

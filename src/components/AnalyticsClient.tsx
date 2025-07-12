@@ -71,6 +71,12 @@ export const AnalyticsClient: React.FC = () => {
         vertical-align: middle;
         margin-right: 0.5rem;
       }
+      .card {
+        background: var(--theme-elevation-100);
+        border: 1px solid var(--theme-elevation-200);
+        border-radius: var(--style-radius-m);
+        padding: calc(var(--base) * 1.5);
+      }
       .analytics-period-field {
         margin-bottom: 0;
       }
@@ -191,11 +197,7 @@ export const AnalyticsClient: React.FC = () => {
         gap: '1.5rem',
         marginBottom: '3rem'
       }}>
-        <div className="gutter gutter--left gutter--right" style={{
-          border: '1px solid var(--theme-elevation-200)',
-          borderRadius: 'var(--border-radius-m)',
-          padding: 'calc(var(--base) * 1.5)'
-        }}>
+        <div className="card" style={{ flexDirection: 'column' }}>
           <h3 style={{
             fontSize: '0.875rem',
             fontWeight: 500,
@@ -219,11 +221,7 @@ export const AnalyticsClient: React.FC = () => {
           )}
         </div>
 
-        <div className="gutter gutter--left gutter--right" style={{
-          border: '1px solid var(--theme-elevation-200)',
-          borderRadius: 'var(--border-radius-m)',
-          padding: 'calc(var(--base) * 1.5)'
-        }}>
+        <div className="card" style={{ flexDirection: 'column' }}>
           <h3 style={{
             fontSize: '0.875rem',
             fontWeight: 500,
@@ -247,11 +245,7 @@ export const AnalyticsClient: React.FC = () => {
           )}
         </div>
 
-        <div className="gutter gutter--left gutter--right" style={{
-          border: '1px solid var(--theme-elevation-200)',
-          borderRadius: 'var(--border-radius-m)',
-          padding: 'calc(var(--base) * 1.5)'
-        }}>
+        <div className="card" style={{ flexDirection: 'column' }}>
           <h3 style={{
             fontSize: '0.875rem',
             fontWeight: 500,
@@ -275,11 +269,7 @@ export const AnalyticsClient: React.FC = () => {
           )}
         </div>
 
-        <div className="gutter gutter--left gutter--right" style={{
-          border: '1px solid var(--theme-elevation-200)',
-          borderRadius: 'var(--border-radius-m)',
-          padding: 'calc(var(--base) * 1.5)'
-        }}>
+        <div className="card" style={{ flexDirection: 'column' }}>
           <h3 style={{
             fontSize: '0.875rem',
             fontWeight: 500,
@@ -312,11 +302,7 @@ export const AnalyticsClient: React.FC = () => {
           color: 'var(--theme-text)',
           margin: '0 0 1.5rem 0'
         }}>Visitors Over Time</h3>
-        <div className="gutter gutter--left gutter--right" style={{
-          border: '1px solid var(--theme-elevation-200)',
-          borderRadius: 'var(--border-radius-m)',
-          padding: 'calc(var(--base) * 1.5)'
-        }}>
+        <div className="card" style={{ flexDirection: 'column' }}>
           {timeseries.length > 0 ? (
             <ResponsiveContainer width="100%" height={250}>
               <AreaChart
@@ -346,13 +332,10 @@ export const AnalyticsClient: React.FC = () => {
                 />
                 <Tooltip
                   contentStyle={{
-                    backgroundColor: 'var(--theme-elevation-50)',
-                    border: '1px solid var(--theme-elevation-150)',
-                    borderRadius: 'var(--border-radius-s)',
-                    color: 'var(--theme-text)',
-                    padding: '8px 12px',
-                    fontSize: '0.875rem',
-                    boxShadow: 'var(--shadow-lg)'
+                    background: 'var(--theme-elevation-100)',
+                    border: '1px solid var(--theme-elevation-200)',
+                    borderRadius: 'var(--style-radius-m)',
+                    padding: 'calc(var(--base) * 1.5)'
                   }}
                   labelStyle={{
                     color: 'var(--theme-text)',
@@ -389,11 +372,7 @@ export const AnalyticsClient: React.FC = () => {
         gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))',
         gap: '2rem'
       }}>
-        <div className="gutter gutter--left gutter--right" style={{
-          border: '1px solid var(--theme-elevation-200)',
-          borderRadius: 'var(--border-radius-m)',
-          padding: 'calc(var(--base) * 1.5)'
-        }}>
+        <div className="card" style={{ flexDirection: 'column' }}>
           <h3 style={{
             fontSize: '1rem',
             fontWeight: 600,
@@ -424,11 +403,7 @@ export const AnalyticsClient: React.FC = () => {
           </div>
         </div>
 
-        <div className="gutter gutter--left gutter--right" style={{
-          border: '1px solid var(--theme-elevation-200)',
-          borderRadius: 'var(--border-radius-m)',
-          padding: 'calc(var(--base) * 1.5)'
-        }}>
+        <div className="card" style={{ flexDirection: 'column' }}>
           <h3 style={{
             fontSize: '1rem',
             fontWeight: 600,
