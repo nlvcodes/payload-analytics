@@ -146,7 +146,16 @@ export const analyticsPlugin = (pluginConfig: AnalyticsPluginConfig | LegacyAnal
 
           const url = new URL(req.url || '', `http://localhost`)
           const period = url.searchParams.get('period') || '7d'
-          const data = await provider.getDashboardData(period)
+          const start = url.searchParams.get('start')
+          const end = url.searchParams.get('end')
+          
+          let effectivePeriod = period
+          if (period === 'custom' && start && end) {
+            // Format custom date range for providers
+            effectivePeriod = `${start},${end}`
+          }
+          
+          const data = await provider.getDashboardData(effectivePeriod)
           
           if (!data) {
             return Response.json({ error: 'Failed to fetch analytics data' }, { status: 500 })

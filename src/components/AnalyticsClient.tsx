@@ -25,12 +25,19 @@ export const AnalyticsClient: React.FC = () => {
   }, [])
   
   const [period, setPeriod] = useState<TimePeriod>(defaultTimePeriod)
+  const [showCustomDatePicker, setShowCustomDatePicker] = useState(false)
+  const [customStartDate, setCustomStartDate] = useState('')
+  const [customEndDate, setCustomEndDate] = useState('')
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true)
       try {
-        const response = await fetch(`/api/analytics/dashboard?period=${period}`)
+        let url = `/api/analytics/dashboard?period=${period}`
+        if (period === 'custom' && customStartDate && customEndDate) {
+          url = `/api/analytics/dashboard?period=custom&start=${customStartDate}&end=${customEndDate}`
+        }
+        const response = await fetch(url)
         if (!response.ok) {
           throw new Error('Failed to fetch analytics data')
         }
@@ -43,8 +50,10 @@ export const AnalyticsClient: React.FC = () => {
       }
     }
 
-    fetchData()
-  }, [period])
+    if (period !== 'custom' || (customStartDate && customEndDate)) {
+      fetchData()
+    }
+  }, [period, customStartDate, customEndDate])
 
   // Add custom styles for analytics
   useEffect(() => {
@@ -150,6 +159,51 @@ export const AnalyticsClient: React.FC = () => {
       .analytics-table tr:last-child td {
         border-bottom: none;
       }
+      .analytics-custom-date-picker {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+        margin-top: 1rem;
+        padding: 1rem;
+        background: var(--theme-elevation-50);
+        border: 1px solid var(--theme-elevation-200);
+        border-radius: var(--style-radius-m);
+      }
+      .analytics-custom-date-picker input[type="date"] {
+        padding: 0.5rem 1rem;
+        border: 1px solid var(--theme-elevation-200);
+        border-radius: var(--style-radius-s);
+        background-color: var(--theme-elevation-0);
+        color: var(--theme-text);
+        font-size: var(--font-size-small);
+        font-family: var(--font-family);
+        line-height: var(--line-height-s);
+      }
+      .analytics-custom-date-picker input[type="date"]:focus {
+        outline: none;
+        border-color: var(--theme-success-500);
+        box-shadow: 0 0 0 3px var(--theme-success-100);
+      }
+      .analytics-custom-date-picker button {
+        padding: 0.5rem 1.5rem;
+        border: none;
+        border-radius: var(--style-radius-s);
+        background-color: var(--theme-success-500);
+        color: white;
+        font-size: var(--font-size-small);
+        font-family: var(--font-family);
+        font-weight: 500;
+        cursor: pointer;
+        transition: background-color var(--transition-duration-default) var(--transition-timing-default);
+      }
+      .analytics-custom-date-picker button:hover {
+        background-color: var(--theme-success-600);
+      }
+      .analytics-custom-date-picker button:disabled {
+        background-color: var(--theme-elevation-200);
+        color: var(--theme-text-light);
+        cursor: not-allowed;
+      }
       @media (max-width: 768px) {
         .analytics-tables {
           grid-template-columns: 1fr;
@@ -159,6 +213,10 @@ export const AnalyticsClient: React.FC = () => {
         }
         .analytics-table {
           min-width: 400px;
+        }
+        .analytics-custom-date-picker {
+          flex-direction: column;
+          align-items: stretch;
         }
       }
     `
@@ -206,7 +264,11 @@ export const AnalyticsClient: React.FC = () => {
           <select
             id="analytics-period"
             value={period}
-            onChange={(e) => setPeriod(e.target.value as TimePeriod)}
+            onChange={(e) => {
+              const newPeriod = e.target.value as TimePeriod
+              setPeriod(newPeriod)
+              setShowCustomDatePicker(newPeriod === 'custom')
+            }}
             className="payload-select"
           >
             {timePeriods.map((tp: TimePeriod) => (
@@ -226,6 +288,44 @@ export const AnalyticsClient: React.FC = () => {
           <span>{realtime.visitors} visitor{realtime.visitors !== 1 ? 's' : ''} online now</span>
         </div>
       </div>
+
+      {/* Custom Date Picker */}
+      {showCustomDatePicker && (
+        <div className="analytics-custom-date-picker">
+          <div>
+            <label htmlFor="start-date" style={{ marginRight: '0.5rem' }}>From:</label>
+            <input
+              type="date"
+              id="start-date"
+              value={customStartDate}
+              onChange={(e) => setCustomStartDate(e.target.value)}
+              max={new Date().toISOString().split('T')[0]}
+            />
+          </div>
+          <div>
+            <label htmlFor="end-date" style={{ marginRight: '0.5rem' }}>To:</label>
+            <input
+              type="date"
+              id="end-date"
+              value={customEndDate}
+              onChange={(e) => setCustomEndDate(e.target.value)}
+              min={customStartDate}
+              max={new Date().toISOString().split('T')[0]}
+            />
+          </div>
+          <button
+            onClick={() => {
+              if (customStartDate && customEndDate) {
+                // Trigger data fetch by updating the period
+                setPeriod('custom')
+              }
+            }}
+            disabled={!customStartDate || !customEndDate}
+          >
+            Apply
+          </button>
+        </div>
+      )}
 
       {/* Stats Cards */}
       <div style={{

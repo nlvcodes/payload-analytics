@@ -40,9 +40,15 @@ export type TimePeriod =
   | '7d' 
   | '14d' 
   | '30d' 
+  | '6mo'
+  | '12mo'
+  | 'month'
   | 'lastMonth' 
-  | 'thisMonth' 
-  | '12mo' 
+  | 'thisMonth'
+  | 'year'
+  | 'lastYear'
+  | 'thisYear'
+  | 'all'
   | 'custom'
   | string // Allow provider-specific periods
 
