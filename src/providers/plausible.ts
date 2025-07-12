@@ -119,6 +119,32 @@ export function createPlausibleProvider(config: PlausibleConfig): AnalyticsProvi
           const [start, end] = period.split(',')
           apiParams.period = 'custom'
           apiParams.date = `${start},${end}`
+        } else if (period === 'all') {
+          // For all time, use custom period with a very early start date
+          const today = new Date().toISOString().split('T')[0]
+          apiParams.period = 'custom'
+          apiParams.date = `2019-01-01,${today}` // Plausible started in 2019
+        } else if (period === 'year' || period === 'thisYear') {
+          // Year to date
+          const now = new Date()
+          const yearStart = new Date(now.getFullYear(), 0, 1).toISOString().split('T')[0]
+          const today = now.toISOString().split('T')[0]
+          apiParams.period = 'custom'
+          apiParams.date = `${yearStart},${today}`
+        } else if (period === 'lastYear') {
+          // Last year
+          const now = new Date()
+          const lastYearStart = new Date(now.getFullYear() - 1, 0, 1).toISOString().split('T')[0]
+          const lastYearEnd = new Date(now.getFullYear() - 1, 11, 31).toISOString().split('T')[0]
+          apiParams.period = 'custom'
+          apiParams.date = `${lastYearStart},${lastYearEnd}`
+        } else if (period === 'lastMonth') {
+          // Last month
+          const now = new Date()
+          const lastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1)
+          const lastMonthEnd = new Date(now.getFullYear(), now.getMonth(), 0)
+          apiParams.period = 'custom'
+          apiParams.date = `${lastMonth.toISOString().split('T')[0]},${lastMonthEnd.toISOString().split('T')[0]}`
         } else {
           apiParams.period = period
           apiParams.compare = 'previous_period'
