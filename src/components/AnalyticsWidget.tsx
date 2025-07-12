@@ -39,45 +39,24 @@ export const AnalyticsWidget: React.FC = () => {
   }
 
   return (
-    <div className="card" style={{ marginBottom: '2rem' }}>
-      <div style={{ 
-        display: 'flex', 
-        justifyContent: 'space-between', 
-        alignItems: 'center',
-        marginBottom: '1rem'
-      }}>
-        <h3 style={{ 
-          fontSize: '1rem', 
-          fontWeight: '600', 
-          margin: 0,
-          color: 'var(--theme-text)'
-        }}>
+    <div className="card" style={{ marginBottom: '2rem', flexDirection: 'column' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+        <h3 style={{ fontSize: '1rem', fontWeight: 600, margin: 0, color: 'var(--theme-text)' }}>
           Today's Analytics
         </h3>
-        
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: '0.5rem',
-          fontSize: '0.875rem',
-          color: 'var(--theme-text-light)'
-        }}>
+        <h3 style={{ fontSize: '1rem', fontWeight: 600, margin: 0, color: 'var(--theme-text)' }}>
           <span style={{
             width: '8px',
             height: '8px',
             backgroundColor: data.realtime.visitors > 0 ? '#10b981' : '#6b7280',
             borderRadius: '50%',
-            display: 'inline-block'
+            display: 'inline-block',
+            marginRight: '0.5rem'
           }} />
           {data.realtime.visitors} visitor{data.realtime.visitors !== 1 ? 's' : ''} online now
-        </div>
+        </h3>
       </div>
-      
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
-        gap: '1rem'
-      }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '1rem' }}>
         <div>
           <div style={{ fontSize: '0.75rem', color: 'var(--theme-text-light)' }}>Visitors</div>
           <div style={{ fontSize: '1.5rem', fontWeight: '600', color: 'var(--theme-text)' }}>
