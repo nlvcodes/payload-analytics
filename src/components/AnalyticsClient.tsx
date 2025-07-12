@@ -230,7 +230,7 @@ export const AnalyticsClient: React.FC = () => {
     )
   }
 
-  const { stats, timeseries, pages, sources, events, realtime } = data
+  const { stats, timeseries, pages, sources, events, realtime = { visitors: 0 } } = data
 
   return (
     <div>

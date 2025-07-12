@@ -48,12 +48,12 @@ export const AnalyticsWidget: React.FC = () => {
           <span style={{
             width: '8px',
             height: '8px',
-            backgroundColor: data.realtime.visitors > 0 ? '#10b981' : '#6b7280',
+            backgroundColor: (data.realtime?.visitors || 0) > 0 ? '#10b981' : '#6b7280',
             borderRadius: '50%',
             display: 'inline-block',
             marginRight: '0.5rem'
           }} />
-          {data.realtime.visitors} visitor{data.realtime.visitors !== 1 ? 's' : ''} online now
+          {data.realtime?.visitors || 0} visitor{data.realtime?.visitors !== 1 ? 's' : ''} online now
         </h3>
       </div>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '1rem' }}>

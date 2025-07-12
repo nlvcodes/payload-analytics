@@ -135,7 +135,7 @@ export interface DashboardData {
     events: number
     conversion_rate: number
   }>
-  realtime: {
+  realtime?: {
     visitors: number
   }
 }
