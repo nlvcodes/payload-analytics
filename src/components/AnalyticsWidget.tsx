@@ -39,22 +39,46 @@ export const AnalyticsWidget: React.FC = () => {
   }
 
   return (
-    <div className="card" style={{ marginBottom: '2rem', display: 'flex', gap: '2rem', alignItems: 'flex-start' }}>
-      <h3 style={{ 
-        fontSize: '1rem', 
-        fontWeight: '600', 
-        margin: 0,
-        color: 'var(--theme-text)',
-        flexShrink: 0
+    <div className="card" style={{ marginBottom: '2rem' }}>
+      <div style={{ 
+        display: 'flex', 
+        justifyContent: 'space-between', 
+        alignItems: 'center',
+        marginBottom: '1rem'
       }}>
-        Today's Analytics
-      </h3>
+        <h3 style={{ 
+          fontSize: '1rem', 
+          fontWeight: '600', 
+          margin: 0,
+          color: 'var(--theme-text)'
+        }}>
+          Today's Analytics
+        </h3>
+        
+        {data.realtime.visitors > 0 && (
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.5rem',
+            fontSize: '0.875rem',
+            color: 'var(--theme-text-light)'
+          }}>
+            <span style={{
+              width: '8px',
+              height: '8px',
+              backgroundColor: '#10b981',
+              borderRadius: '50%',
+              display: 'inline-block'
+            }} />
+            {data.realtime.visitors} visitor{data.realtime.visitors !== 1 ? 's' : ''} online now
+          </div>
+        )}
+      </div>
       
       <div style={{
         display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))',
-        gap: '1.5rem',
-        flex: 1
+        gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
+        gap: '1rem'
       }}>
         <div>
           <div style={{ fontSize: '0.75rem', color: 'var(--theme-text-light)' }}>Visitors</div>
@@ -84,26 +108,6 @@ export const AnalyticsWidget: React.FC = () => {
           </div>
         </div>
       </div>
-      
-      {data.realtime.visitors > 0 && (
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: '0.5rem',
-          fontSize: '0.875rem',
-          color: 'var(--theme-text-light)',
-          flexShrink: 0
-        }}>
-          <span style={{
-            width: '8px',
-            height: '8px',
-            backgroundColor: '#10b981',
-            borderRadius: '50%',
-            display: 'inline-block'
-          }} />
-          {data.realtime.visitors} visitor{data.realtime.visitors !== 1 ? 's' : ''} online now
-        </div>
-      )}
     </div>
   )
 }

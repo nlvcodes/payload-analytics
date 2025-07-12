@@ -326,13 +326,13 @@ export const AnalyticsClient: React.FC = () => {
                   tickFormatter={(value, index) => formatAxisDate(value, period)}
                   stroke="var(--theme-text-light)"
                   style={{ fontSize: '0.75rem' }}
-                  tick={{ fill: 'var(--theme-text-light)' }}
+                  tick={{ fill: 'var(--theme-text)' }}
                   interval="preserveStartEnd"
                 />
                 <YAxis
                   stroke="var(--theme-text-light)"
                   style={{ fontSize: '0.75rem' }}
-                  tick={{ fill: 'var(--theme-text-light)' }}
+                  tick={{ fill: 'var(--theme-text)' }}
                   tickFormatter={formatNumber}
                 />
                 <Tooltip
