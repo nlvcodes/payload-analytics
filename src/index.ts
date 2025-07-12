@@ -136,14 +136,7 @@ export const analyticsPlugin = (pluginConfig: AnalyticsPluginConfig | LegacyAnal
     endpoints: [
       ...(config.endpoints || []),
       {
-        path: '/test',
-        method: 'get',
-        handler: async (req) => {
-          return Response.json({ message: 'Test endpoint works!' })
-        },
-      },
-      {
-        path: '/analytics/dashboard',
+        path: '/api/analytics/dashboard',
         method: 'get',
         handler: async (req) => {
           const provider = (global as any).__analyticsProvider as AnalyticsProvider
@@ -186,6 +179,3 @@ export { createUmamiProvider } from './providers/umami'
 export { createMatomoProvider } from './providers/matomo'
 export { createPostHogProvider } from './providers/posthog'
 export { createGoogleAnalyticsProvider } from './providers/google-analytics'
-export { AnalyticsView } from './components/AnalyticsView'
-export { AnalyticsWidget } from './components/AnalyticsWidget'
-export { AnalyticsClient } from './components/AnalyticsClient'

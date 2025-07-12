@@ -50,10 +50,10 @@ export const AnalyticsClient: React.FC = () => {
       }
     }
 
-    if (period !== 'custom' || (customStartDate && customEndDate)) {
+    if (period !== 'custom') {
       fetchData()
     }
-  }, [period, customStartDate, customEndDate])
+  }, [period])
 
   // Add custom styles for analytics
   useEffect(() => {
@@ -84,6 +84,9 @@ export const AnalyticsClient: React.FC = () => {
         display: flex;
         align-items: center;
         gap: 0.5rem;
+      }
+      .field-type.select.analytics-period-field {
+        margin-top: 1.5rem;
       }
       .analytics-period-selector label {
         font-weight: 500;
@@ -164,6 +167,7 @@ export const AnalyticsClient: React.FC = () => {
         gap: 1rem;
         align-items: center;
         margin-top: 1rem;
+        margin-bottom: 2rem;
         padding: 1rem;
         background: var(--theme-elevation-50);
         border: 1px solid var(--theme-elevation-200);
@@ -183,26 +187,6 @@ export const AnalyticsClient: React.FC = () => {
         outline: none;
         border-color: var(--theme-success-500);
         box-shadow: 0 0 0 3px var(--theme-success-100);
-      }
-      .analytics-custom-date-picker button {
-        padding: 0.5rem 1.5rem;
-        border: none;
-        border-radius: var(--style-radius-s);
-        background-color: var(--theme-success-500);
-        color: white;
-        font-size: var(--font-size-small);
-        font-family: var(--font-family);
-        font-weight: 500;
-        cursor: pointer;
-        transition: background-color var(--transition-duration-default) var(--transition-timing-default);
-      }
-      .analytics-custom-date-picker button:hover {
-        background-color: var(--theme-success-600);
-      }
-      .analytics-custom-date-picker button:disabled {
-        background-color: var(--theme-elevation-200);
-        color: var(--theme-text-light);
-        cursor: not-allowed;
       }
       @media (max-width: 768px) {
         .analytics-tables {
@@ -259,24 +243,26 @@ export const AnalyticsClient: React.FC = () => {
         flexWrap: 'wrap',
         gap: '1rem'
       }}>
-        <div className="analytics-period-selector">
-          <label htmlFor="analytics-period">Time Period:</label>
-          <select
-            id="analytics-period"
-            value={period}
-            onChange={(e) => {
-              const newPeriod = e.target.value as TimePeriod
-              setPeriod(newPeriod)
-              setShowCustomDatePicker(newPeriod === 'custom')
-            }}
-            className="payload-select"
-          >
-            {timePeriods.map((tp: TimePeriod) => (
-              <option key={tp} value={tp}>
-                {TIME_PERIOD_LABELS[tp] || tp}
-              </option>
-            ))}
-          </select>
+        <div className="field-type select analytics-period-field">
+          <label className="field-label" htmlFor="analytics-period">Time Period</label>
+          <div className="field-type__wrap">
+            <select
+              id="analytics-period"
+              value={period}
+              onChange={(e) => {
+                const newPeriod = e.target.value as TimePeriod
+                setPeriod(newPeriod)
+                setShowCustomDatePicker(newPeriod === 'custom')
+              }}
+              className="payload__select"
+            >
+              {timePeriods.map((tp: TimePeriod) => (
+                <option key={tp} value={tp}>
+                  {TIME_PERIOD_LABELS[tp] || tp}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
         <div style={{ 
           display: 'flex', 
@@ -314,15 +300,31 @@ export const AnalyticsClient: React.FC = () => {
             />
           </div>
           <button
-            onClick={() => {
+            className={`btn btn--icon-style-without-border btn--size-medium btn--withoutPopup btn--style-primary ${(!customStartDate || !customEndDate) ? 'btn--disabled' : ''}`}
+            type="button"
+            onClick={async () => {
               if (customStartDate && customEndDate) {
-                // Trigger data fetch by updating the period
-                setPeriod('custom')
+                setLoading(true)
+                try {
+                  const url = `/api/analytics/dashboard?period=custom&start=${customStartDate}&end=${customEndDate}`
+                  const response = await fetch(url)
+                  if (!response.ok) {
+                    throw new Error('Failed to fetch analytics data')
+                  }
+                  const analyticsData = await response.json()
+                  setData(analyticsData)
+                } catch (err) {
+                  setError(err instanceof Error ? err.message : 'An error occurred')
+                } finally {
+                  setLoading(false)
+                }
               }
             }}
             disabled={!customStartDate || !customEndDate}
           >
-            Apply
+            <span className="btn__content">
+              <span className="btn__label">Apply</span>
+            </span>
           </button>
         </div>
       )}
