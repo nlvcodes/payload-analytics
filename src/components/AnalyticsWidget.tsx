@@ -55,24 +55,22 @@ export const AnalyticsWidget: React.FC = () => {
           Today's Analytics
         </h3>
         
-        {data.realtime.visitors > 0 && (
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.5rem',
-            fontSize: '0.875rem',
-            color: 'var(--theme-text-light)'
-          }}>
-            <span style={{
-              width: '8px',
-              height: '8px',
-              backgroundColor: '#10b981',
-              borderRadius: '50%',
-              display: 'inline-block'
-            }} />
-            {data.realtime.visitors} visitor{data.realtime.visitors !== 1 ? 's' : ''} online now
-          </div>
-        )}
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '0.5rem',
+          fontSize: '0.875rem',
+          color: 'var(--theme-text-light)'
+        }}>
+          <span style={{
+            width: '8px',
+            height: '8px',
+            backgroundColor: data.realtime.visitors > 0 ? '#10b981' : '#6b7280',
+            borderRadius: '50%',
+            display: 'inline-block'
+          }} />
+          {data.realtime.visitors} visitor{data.realtime.visitors !== 1 ? 's' : ''} online now
+        </div>
       </div>
       
       <div style={{
