@@ -6,6 +6,7 @@ import { createMatomoProvider } from './providers/matomo'
 import { createPostHogProvider } from './providers/posthog'
 import { createGoogleAnalyticsProvider } from './providers/google-analytics'
 import { DEFAULT_TIME_PERIODS, DEFAULT_COMPARISON_OPTIONS } from './constants'
+import { analyticsEndpoint } from './endpoints/analytics'
 import path from 'path'
 
 export const analyticsPlugin = (pluginConfig: AnalyticsPluginConfig | LegacyAnalyticsPluginConfig) => (config: Config): Config => {
@@ -104,6 +105,9 @@ export const analyticsPlugin = (pluginConfig: AnalyticsPluginConfig | LegacyAnal
   ;(global as any).__analyticsDashboardPath = dashboardPath
   ;(global as any).__adminRoute = '/admin' // Default admin route
 
+  // Log for debugging
+  console.log('[Analytics Plugin] Registering endpoint at /api/analytics/dashboard')
+
   const updatedConfig: Config = {
     ...config,
     admin: {
@@ -138,31 +142,7 @@ export const analyticsPlugin = (pluginConfig: AnalyticsPluginConfig | LegacyAnal
       {
         path: '/api/analytics/dashboard',
         method: 'get',
-        handler: async (req) => {
-          const provider = (global as any).__analyticsProvider as AnalyticsProvider
-          if (!provider) {
-            return Response.json({ error: 'Analytics provider not configured' }, { status: 500 })
-          }
-
-          const url = new URL(req.url || '', `http://localhost`)
-          const period = url.searchParams.get('period') || '7d'
-          const start = url.searchParams.get('start')
-          const end = url.searchParams.get('end')
-          
-          let effectivePeriod = period
-          if (period === 'custom' && start && end) {
-            // Format custom date range for providers
-            effectivePeriod = `${start},${end}`
-          }
-          
-          const data = await provider.getDashboardData(effectivePeriod)
-          
-          if (!data) {
-            return Response.json({ error: 'Failed to fetch analytics data' }, { status: 500 })
-          }
-
-          return Response.json(data)
-        },
+        handler: analyticsEndpoint,
       },
     ],
   }
