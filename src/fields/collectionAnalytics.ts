@@ -23,12 +23,10 @@ export const createCollectionAnalyticsFields = ({ config, overrides }: Collectio
         type: 'ui',
         admin: {
           components: {
-            Field: {
-              clientProps: {
-                rootPath: config.rootPath,
-              },
-              path: 'payload-analytics-plugin/components/CollectionAnalyticsField',
-            },
+            Field: 'payload-analytics-plugin/components/CollectionAnalyticsField',
+          },
+          custom: {
+            rootPath: config.rootPath,
           },
         },
       },

@@ -1,1 +1,1 @@
-export { CollectionAnalyticsField as default } from '../dist/components/CollectionAnalyticsField'
+export { default } from '../dist/components/CollectionAnalyticsField'

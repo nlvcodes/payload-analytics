@@ -1,18 +1,19 @@
 'use client'
 
 import React from 'react'
-import { useFormFields } from '@payloadcms/ui'
+import { useFormFields, useConfig } from '@payloadcms/ui'
+import { useRouter } from 'next/navigation'
 import { CollectionAnalytics } from './CollectionAnalytics'
 
-interface CollectionAnalyticsFieldProps {
-  collectionSlug: string
-  rootPath: string
-}
-
-export const CollectionAnalyticsField: React.FC<CollectionAnalyticsFieldProps> = ({ 
-  collectionSlug, 
-  rootPath 
-}) => {
+export const CollectionAnalyticsField: React.FC<{ custom?: { rootPath?: string } }> = ({ custom }) => {
+  const config = useConfig()
+  const router = useRouter()
+  
+  // Get collection slug from URL
+  const pathSegments = typeof window !== 'undefined' ? window.location.pathname.split('/') : []
+  const adminIndex = pathSegments.indexOf('admin')
+  const collectionSlug = adminIndex >= 0 ? pathSegments[adminIndex + 2] : '' // admin/collections/[slug]
+  
   // Get the current document's slug from form fields
   const { slug } = useFormFields(([fields]) => {
     return {
@@ -20,7 +21,9 @@ export const CollectionAnalyticsField: React.FC<CollectionAnalyticsFieldProps> =
     }
   })
 
-  if (!slug) {
+  const rootPath = custom?.rootPath || '/'
+
+  if (!slug || !collectionSlug) {
     return null
   }
 
