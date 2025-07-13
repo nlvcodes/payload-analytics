@@ -87,19 +87,11 @@ export const AnalyticsClient: React.FC = () => {
         vertical-align: middle;
         margin-right: 0.5rem;
       }
-      .analytics-period-selector {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-      }
       .field-type.select.analytics-period-field {
-        margin-top: 1.5rem;
+        margin-top: 0;
+        margin-bottom: 0;
       }
-      .analytics-period-selector label {
-        font-weight: 500;
-        color: var(--theme-text);
-      }
-      .analytics-period-selector .payload-select {
+      .field-type.select.analytics-period-field .select {
         padding: 0.5rem 2rem 0.5rem 1rem;
         border: 1px solid var(--theme-elevation-200);
         border-radius: var(--style-radius-s);
@@ -116,11 +108,11 @@ export const AnalyticsClient: React.FC = () => {
         appearance: none;
         transition: all var(--transition-duration-default) var(--transition-timing-default);
       }
-      .analytics-period-selector .payload-select:hover {
+      .field-type.select.analytics-period-field .select:hover {
         border-color: var(--theme-elevation-300);
         background-color: var(--theme-elevation-50);
       }
-      .analytics-period-selector .payload-select:focus {
+      .field-type.select.analytics-period-field .select:focus {
         outline: none;
         border-color: var(--theme-success-500);
         box-shadow: 0 0 0 3px var(--theme-success-100);
@@ -261,7 +253,7 @@ export const AnalyticsClient: React.FC = () => {
                 setPeriod(newPeriod)
                 setShowCustomDatePicker(newPeriod === 'custom')
               }}
-              className="payload__select"
+              className="select"
             >
               {timePeriods.map((tp: TimePeriod) => (
                 <option key={tp} value={tp}>
