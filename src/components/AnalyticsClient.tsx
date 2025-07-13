@@ -88,6 +88,10 @@ export const AnalyticsClient: React.FC = () => {
         vertical-align: middle;
         margin-right: 0.5rem;
       }
+      .analytics-realtime-dot.inactive {
+        background-color: var(--theme-elevation-400);
+        animation: none;
+      }
       .card {
         background: var(--theme-elevation-100);
         border: 1px solid var(--theme-elevation-200);
@@ -136,6 +140,13 @@ export const AnalyticsClient: React.FC = () => {
         background: var(--theme-elevation-50);
         border: 1px solid var(--theme-elevation-200);
         border-radius: var(--style-radius-m);
+        flex-wrap: wrap;
+      }
+      .analytics-date-inputs {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+        flex-wrap: nowrap;
       }
       .analytics-custom-date-picker input[type="date"] {
         padding: 0.5rem 1rem;
@@ -151,6 +162,22 @@ export const AnalyticsClient: React.FC = () => {
         outline: none;
         border-color: var(--theme-success-500);
         box-shadow: 0 0 0 3px var(--theme-success-100);
+      }
+      @media (max-width: 480px) {
+        .analytics-date-inputs {
+          min-width: 0;
+          flex-shrink: 1;
+        }
+        .analytics-date-inputs input[type="date"] {
+          width: auto;
+          min-width: 0;
+        }
+      }
+      @media (max-width: 640px) {
+        .analytics-select-wrapper {
+          width: 100% !important;
+          min-width: unset !important;
+        }
       }
       @media (max-width: 768px) {
         .analytics-tables {
@@ -201,37 +228,37 @@ export const AnalyticsClient: React.FC = () => {
       {/* Controls */}
       <div style={{ 
         display: 'flex', 
-        justifyContent: 'space-between', 
-        alignItems: 'center', 
-        marginBottom: '2rem',
-        flexWrap: 'wrap',
-        gap: '1rem'
+        flexDirection: 'column',
+        gap: '1rem',
+        marginBottom: '2rem'
       }}>
-        <SelectInput
-          label="Time Period"
-          name="analytics-period"
-          path="analytics-period"
-          value={period}
-          onChange={(option) => {
-            if (!option) return
-            const newPeriod = (Array.isArray(option) ? option[0]?.value : option.value) as TimePeriod
-            setPeriod(newPeriod)
-            setShowCustomDatePicker(newPeriod === 'custom')
-          }}
-          options={timePeriods.map((tp: TimePeriod) => ({
-            label: TIME_PERIOD_LABELS[tp] || tp,
-            value: tp
-          }))}
-          isClearable={false}
-          isSortable={false}
-        />
+        <div className="analytics-select-wrapper" style={{ width: '50%', minWidth: '300px' }}>
+          <SelectInput
+            label="Time Period"
+            name="analytics-period"
+            path="analytics-period"
+            value={period}
+            onChange={(option) => {
+              if (!option) return
+              const newPeriod = (Array.isArray(option) ? option[0]?.value : option.value) as TimePeriod
+              setPeriod(newPeriod)
+              setShowCustomDatePicker(newPeriod === 'custom')
+            }}
+            options={timePeriods.map((tp: TimePeriod) => ({
+              label: TIME_PERIOD_LABELS[tp] || tp,
+              value: tp
+            }))}
+            isClearable={false}
+            isSortable={false}
+          />
+        </div>
         <div style={{ 
           display: 'flex', 
           alignItems: 'center',
           color: 'var(--theme-text-light)',
           fontSize: '0.875rem'
         }}>
-          <span className="analytics-realtime-dot"></span>
+          <span className={`analytics-realtime-dot ${realtime.visitors === 0 ? 'inactive' : ''}`}></span>
           <span>{realtime.visitors} visitor{realtime.visitors !== 1 ? 's' : ''} online now</span>
         </div>
       </div>
@@ -239,26 +266,28 @@ export const AnalyticsClient: React.FC = () => {
       {/* Custom Date Picker */}
       {showCustomDatePicker && (
         <div className="analytics-custom-date-picker">
-          <div>
-            <label htmlFor="start-date" style={{ marginRight: '0.5rem' }}>From:</label>
-            <input
-              type="date"
-              id="start-date"
-              value={customStartDate}
-              onChange={(e) => setCustomStartDate(e.target.value)}
-              max={new Date().toISOString().split('T')[0]}
-            />
-          </div>
-          <div>
-            <label htmlFor="end-date" style={{ marginRight: '0.5rem' }}>To:</label>
-            <input
-              type="date"
-              id="end-date"
-              value={customEndDate}
-              onChange={(e) => setCustomEndDate(e.target.value)}
-              min={customStartDate}
-              max={new Date().toISOString().split('T')[0]}
-            />
+          <div className="analytics-date-inputs">
+            <div>
+              <label htmlFor="start-date" style={{ marginRight: '0.5rem' }}>From:</label>
+              <input
+                type="date"
+                id="start-date"
+                value={customStartDate}
+                onChange={(e) => setCustomStartDate(e.target.value)}
+                max={new Date().toISOString().split('T')[0]}
+              />
+            </div>
+            <div>
+              <label htmlFor="end-date" style={{ marginRight: '0.5rem' }}>To:</label>
+              <input
+                type="date"
+                id="end-date"
+                value={customEndDate}
+                onChange={(e) => setCustomEndDate(e.target.value)}
+                min={customStartDate}
+                max={new Date().toISOString().split('T')[0]}
+              />
+            </div>
           </div>
           <button
             className={`btn btn--icon-style-without-border btn--size-medium btn--withoutPopup btn--style-primary ${(!customStartDate || !customEndDate) ? 'btn--disabled' : ''}`}

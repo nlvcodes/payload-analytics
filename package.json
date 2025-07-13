@@ -35,7 +35,6 @@
     "react-dom": "^19.0.0"
   },
   "dependencies": {
-    "payload-analytics-plugin": "github:nlvcodes/payload-analytics",
     "recharts": "^2.13.3",
     "zod": "^3.23.8"
   },
