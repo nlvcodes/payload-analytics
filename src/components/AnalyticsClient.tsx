@@ -37,7 +37,12 @@ export const AnalyticsClient: React.FC = () => {
         if (period === 'custom' && customStartDate && customEndDate) {
           url = `/api/analytics/dashboard?period=custom&start=${customStartDate}&end=${customEndDate}`
         }
-        const response = await fetch(url)
+        const response = await fetch(url, {
+          credentials: 'same-origin',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        })
         if (!response.ok) {
           throw new Error('Failed to fetch analytics data')
         }

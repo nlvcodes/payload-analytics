@@ -27,7 +27,12 @@ export const AnalyticsWidget: React.FC = () => {
 
   useEffect(() => {
     // Widget always shows today's data
-    fetch('/api/analytics/dashboard?period=day')
+    fetch('/api/analytics/dashboard?period=day', {
+      credentials: 'same-origin',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
       .then(res => res.json())
       .then(setData)
       .catch(console.error)
