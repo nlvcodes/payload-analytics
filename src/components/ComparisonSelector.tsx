@@ -89,9 +89,10 @@ export const ComparisonSelector: React.FC<ComparisonSelectorProps> = ({
         <div style={{ 
           display: 'flex', 
           gap: '1rem',
-          alignItems: 'flex-end'
+          alignItems: 'flex-end',
+          flexWrap: 'wrap'
         }}>
-          <div style={{ flex: 1 }}>
+          <div style={{ flex: '1 1 150px' }}>
             <label style={{ 
               display: 'block', 
               marginBottom: '0.5rem',
@@ -104,10 +105,7 @@ export const ComparisonSelector: React.FC<ComparisonSelectorProps> = ({
             <input
               type="date"
               value={customStartDate}
-              onChange={(e) => {
-                setCustomStartDate(e.target.value)
-                handleCustomDateChange(e.target.value, customEndDate)
-              }}
+              onChange={(e) => setCustomStartDate(e.target.value)}
               style={{
                 width: '100%',
                 padding: '0.5rem',
@@ -119,7 +117,7 @@ export const ComparisonSelector: React.FC<ComparisonSelectorProps> = ({
               }}
             />
           </div>
-          <div style={{ flex: 1 }}>
+          <div style={{ flex: '1 1 150px' }}>
             <label style={{ 
               display: 'block', 
               marginBottom: '0.5rem',
@@ -132,10 +130,7 @@ export const ComparisonSelector: React.FC<ComparisonSelectorProps> = ({
             <input
               type="date"
               value={customEndDate}
-              onChange={(e) => {
-                setCustomEndDate(e.target.value)
-                handleCustomDateChange(customStartDate, e.target.value)
-              }}
+              onChange={(e) => setCustomEndDate(e.target.value)}
               style={{
                 width: '100%',
                 padding: '0.5rem',
@@ -147,6 +142,21 @@ export const ComparisonSelector: React.FC<ComparisonSelectorProps> = ({
               }}
             />
           </div>
+          <button
+            className={`btn btn--icon-style-without-border btn--size-small btn--withoutPopup btn--style-primary ${(!customStartDate || !customEndDate) ? 'btn--disabled' : ''}`}
+            type="button"
+            onClick={() => {
+              if (customStartDate && customEndDate) {
+                handleCustomDateChange(customStartDate, customEndDate)
+              }
+            }}
+            disabled={!customStartDate || !customEndDate}
+            style={{ alignSelf: 'flex-end' }}
+          >
+            <span className="btn__content">
+              <span className="btn__label">Apply</span>
+            </span>
+          </button>
         </div>
       )}
     </div>

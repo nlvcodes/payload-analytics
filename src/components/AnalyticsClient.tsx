@@ -13,6 +13,7 @@ export const AnalyticsClient: React.FC = () => {
   const [data, setData] = useState<DashboardData | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [isTransitioning, setIsTransitioning] = useState(false)
   
   // Get config from global - safe for SSR
   const [timePeriods, setTimePeriods] = useState<TimePeriod[]>(['day', '7d', '30d', '12mo'])
@@ -41,7 +42,12 @@ export const AnalyticsClient: React.FC = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      setLoading(true)
+      // Only show loading state on initial load
+      if (!data) {
+        setLoading(true)
+      } else {
+        setIsTransitioning(true)
+      }
       try {
         // Get the API route from the config
         const apiRoute = (window as any).__payloadConfig?.routes?.api || '/api'
@@ -73,6 +79,7 @@ export const AnalyticsClient: React.FC = () => {
         setError(err instanceof Error ? err.message : 'An error occurred')
       } finally {
         setLoading(false)
+        setIsTransitioning(false)
       }
     }
 
@@ -242,7 +249,28 @@ export const AnalyticsClient: React.FC = () => {
   const { stats, timeseries = [], pages = [], sources = [], events = [], realtime = { visitors: 0 } } = data
 
   return (
-    <div>
+    <div style={{ position: 'relative' }}>
+      {isTransitioning && (
+        <div style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: 'var(--theme-bg)',
+          opacity: 0.8,
+          zIndex: 10,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}>
+          <div className="payload__loading-overlay__bars">
+            <div />
+            <div />
+            <div />
+          </div>
+        </div>
+      )}
       {/* Controls */}
       <div style={{ 
         display: 'flex', 
@@ -327,7 +355,7 @@ export const AnalyticsClient: React.FC = () => {
             type="button"
             onClick={async () => {
               if (customStartDate && customEndDate) {
-                setLoading(true)
+                setIsTransitioning(true)
                 try {
                   const apiRoute = (window as any).__payloadConfig?.routes?.api || '/api'
                   let url = `${apiRoute}/analytics/dashboard?period=custom&start=${customStartDate}&end=${customEndDate}`
@@ -355,7 +383,7 @@ export const AnalyticsClient: React.FC = () => {
                 } catch (err) {
                   setError(err instanceof Error ? err.message : 'An error occurred')
                 } finally {
-                  setLoading(false)
+                  setIsTransitioning(false)
                 }
               }
             }}

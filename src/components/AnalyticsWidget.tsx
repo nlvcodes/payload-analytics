@@ -24,9 +24,6 @@ export const AnalyticsWidget: React.FC = () => {
         position: relative;
       }
       .analytics-external-link {
-        position: absolute;
-        bottom: calc(var(--base) * 1.5);
-        right: calc(var(--base) * 1.5);
         display: inline-flex;
         align-items: center;
         gap: 0.25rem;
@@ -34,6 +31,7 @@ export const AnalyticsWidget: React.FC = () => {
         text-decoration: none;
         font-size: 0.875rem;
         transition: color 0.2s;
+        margin-top: 1rem;
       }
       .analytics-external-link:hover {
         color: var(--theme-text);
