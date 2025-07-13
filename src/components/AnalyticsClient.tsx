@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react'
 import { XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Area, AreaChart } from 'recharts'
 import { formatNumber, formatDuration, formatPercentage, formatChange, formatAxisDate, formatTooltipDate } from '../lib/formatters'
-import type { DashboardData, TimePeriod, ComparisonData } from '../types'
+import type { DashboardData, TimePeriod, ComparisonData, TimeSeriesGrouping } from '../types'
 import { TIME_PERIOD_LABELS } from '../constants'
 import {SelectInput} from "@payloadcms/ui";
 import { ComparisonSelector } from './ComparisonSelector'
@@ -39,6 +39,7 @@ export const AnalyticsClient: React.FC = () => {
   const [customStartDate, setCustomStartDate] = useState('')
   const [customEndDate, setCustomEndDate] = useState(new Date().toISOString().split('T')[0])
   const [comparison, setComparison] = useState<ComparisonData | null>(null)
+  const [grouping, setGrouping] = useState<TimeSeriesGrouping>('day')
 
   useEffect(() => {
     const fetchData = async () => {
@@ -64,6 +65,9 @@ export const AnalyticsClient: React.FC = () => {
             url += `&comparison=${comparison.period}`
           }
         }
+        
+        // Add grouping parameter
+        url += `&grouping=${grouping}`
         const response = await fetch(url, {
           credentials: 'same-origin',
           headers: {
@@ -86,7 +90,7 @@ export const AnalyticsClient: React.FC = () => {
     if (period !== 'custom') {
       fetchData()
     }
-  }, [period, comparison])
+  }, [period, comparison, grouping])
 
   // Add custom styles for analytics
   useEffect(() => {
@@ -158,7 +162,8 @@ export const AnalyticsClient: React.FC = () => {
       .analytics-custom-date-picker {
         display: flex;
         gap: 1rem;
-        align-items: center;
+        align-items: flex-start;
+        justify-content: space-between;
         margin-top: 1rem;
         margin-bottom: 2rem;
         padding: 1rem;
@@ -325,9 +330,9 @@ export const AnalyticsClient: React.FC = () => {
       </div>
 
       {/* Custom Date Picker */}
-      {showCustomDatePicker && (
+      {(showCustomDatePicker || comparison?.period === 'custom') && (
         <div className="analytics-custom-date-picker">
-          <div style={{ marginBottom: '1rem' }}>
+          <div style={{ flex: 1, marginRight: '2rem' }}>
             <h4 style={{ margin: '0 0 0.5rem 0', fontSize: '0.875rem', color: 'var(--theme-text)' }}>Date Range</h4>
             <div className="analytics-date-inputs">
               <div>
@@ -356,7 +361,7 @@ export const AnalyticsClient: React.FC = () => {
           
           {/* Comparison Custom Dates */}
           {enableComparison && comparison?.period === 'custom' && (
-            <div style={{ marginBottom: '1rem' }}>
+            <div style={{ flex: 1 }}>
               <h4 style={{ margin: '0 0 0.5rem 0', fontSize: '0.875rem', color: 'var(--theme-text)' }}>Comparison Range</h4>
               <div className="analytics-date-inputs">
                 <div>
@@ -384,7 +389,8 @@ export const AnalyticsClient: React.FC = () => {
             </div>
           )}
           
-          <button
+          <div style={{ alignSelf: 'flex-end' }}>
+            <button
             className={`btn btn--icon-style-without-border btn--size-medium btn--withoutPopup btn--style-primary ${
               (!customStartDate || !customEndDate) || 
               (comparison?.period === 'custom' && (!comparison.customStartDate || !comparison.customEndDate))
@@ -410,6 +416,9 @@ export const AnalyticsClient: React.FC = () => {
                     }
                   }
                   
+                  // Add grouping parameter
+                  url += `&grouping=${grouping}`
+                  
                   const response = await fetch(url, {
                     credentials: 'same-origin',
                     headers: {
@@ -433,10 +442,11 @@ export const AnalyticsClient: React.FC = () => {
               (comparison?.period === 'custom' && (!comparison.customStartDate || !comparison.customEndDate))
             }
           >
-            <span className="btn__content">
-              <span className="btn__label">Apply</span>
-            </span>
-          </button>
+              <span className="btn__content">
+                <span className="btn__label">Apply</span>
+              </span>
+            </button>
+          </div>
         </div>
       )}
 
@@ -558,12 +568,41 @@ export const AnalyticsClient: React.FC = () => {
 
       {/* Chart Section */}
       <div style={{ marginBottom: '3rem' }}>
-        <h3 style={{
-          fontSize: '1.125rem',
-          fontWeight: 600,
-          color: 'var(--theme-text)',
-          margin: '0 0 1.5rem 0'
-        }}>Visitors Over Time</h3>
+        <div style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          marginBottom: '1.5rem',
+          flexWrap: 'wrap',
+          gap: '1rem'
+        }}>
+          <h3 style={{
+            fontSize: '1.125rem',
+            fontWeight: 600,
+            color: 'var(--theme-text)',
+            margin: 0
+          }}>Visitors Over Time</h3>
+          <SelectInput
+            label="Group by"
+            name="analytics-grouping"
+            path="analytics-grouping"
+            value={grouping}
+            onChange={(option) => {
+              if (!option) return
+              const newGrouping = (Array.isArray(option) ? option[0]?.value : option.value) as TimeSeriesGrouping
+              setGrouping(newGrouping)
+            }}
+            options={[
+              ...(period === 'day' ? [{ label: 'Hour', value: 'hour' }] : []),
+              { label: 'Day', value: 'day' },
+              { label: 'Week', value: 'week' },
+              { label: 'Month', value: 'month' },
+              { label: 'Year', value: 'year' },
+            ]}
+            isClearable={false}
+            isSortable={false}
+          />
+        </div>
         <div className="card" style={{ flexDirection: 'column' }}>
           {timeseries.length > 0 ? (
             <ResponsiveContainer width="100%" height={250}>
@@ -580,7 +619,7 @@ export const AnalyticsClient: React.FC = () => {
                 <CartesianGrid strokeDasharray="3 3" stroke="var(--theme-elevation-200)" />
                 <XAxis
                   dataKey="date"
-                  tickFormatter={(value, index) => formatAxisDate(value, period)}
+                  tickFormatter={(value, index) => formatAxisDate(value, period, grouping)}
                   stroke="var(--theme-text-light)"
                   style={{ fontSize: '0.75rem' }}
                   tick={{ fill: 'var(--theme-text)' }}
@@ -608,7 +647,7 @@ export const AnalyticsClient: React.FC = () => {
                     color: 'var(--theme-text)',
                     padding: '2px 0'
                   }}
-                  labelFormatter={(value) => formatTooltipDate(value, period)}
+                  labelFormatter={(value) => formatTooltipDate(value, period, grouping)}
                   formatter={(value: number) => [`${formatNumber(value)} visitors`, '']}
                   separator=""
                 />

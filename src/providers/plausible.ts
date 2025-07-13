@@ -104,7 +104,7 @@ export function createPlausibleProvider(config: PlausibleConfig): AnalyticsProvi
   return {
     name: 'plausible',
     
-    async getDashboardData(period: string = '7d', comparison?: ComparisonData): Promise<DashboardData | null> {
+    async getDashboardData(period: string = '7d', comparison?: ComparisonData, grouping?: string): Promise<DashboardData | null> {
       if (!apiConfig.apiKey || !apiConfig.siteId) {
         console.warn('Plausible API key or site ID is not configured')
         return null
@@ -162,9 +162,17 @@ export function createPlausibleProvider(config: PlausibleConfig): AnalyticsProvi
           }
         }
 
+        // Map grouping to Plausible interval parameter
+        let interval = 'date' // default to day
+        if (grouping === 'hour') interval = 'hour'
+        else if (grouping === 'day') interval = 'date'
+        else if (grouping === 'week') interval = 'week'
+        else if (grouping === 'month') interval = 'month'
+        else if (grouping === 'year') interval = 'year'
+        
         const [statsResponse, timeseries, pages, sources, events, realtime] = await Promise.all([
           fetchPlausibleAPI(apiConfig, 'aggregate', apiParams, StatsSchema),
-          fetchPlausibleAPI(apiConfig, 'timeseries', { ...apiParams, metrics: 'visitors' }, z.object({ results: z.array(TimePeriodSchema) }))
+          fetchPlausibleAPI(apiConfig, 'timeseries', { ...apiParams, metrics: 'visitors', interval }, z.object({ results: z.array(TimePeriodSchema) }))
             .then(data => data?.results || []),
           fetchPlausibleAPI(apiConfig, 'breakdown', { ...apiParams, property: 'event:page', limit: '10', metrics: 'visitors,pageviews,bounce_rate,visit_duration' }, z.object({ results: z.array(PageSchema) }))
             .then(data => data?.results || []),

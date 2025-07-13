@@ -9,6 +9,7 @@ import { DEFAULT_TIME_PERIODS, DEFAULT_COMPARISON_OPTIONS } from './constants'
 import { analyticsEndpoint } from './endpoints/analytics'
 import { collectionAnalyticsEndpoint } from './endpoints/collectionAnalytics'
 import { createAnalyticsTab } from './fields/analyticsTab'
+import { createCollectionAnalyticsFields } from './fields/collectionAnalytics'
 import path from 'path'
 
 export const analyticsPlugin = (pluginConfig: AnalyticsPluginConfig | LegacyAnalyticsPluginConfig) => (config: Config): Config => {
@@ -200,12 +201,57 @@ export const analyticsPlugin = (pluginConfig: AnalyticsPluginConfig | LegacyAnal
         return collection
       }
       
-      // Add analytics tab to collection
+      // Create analytics fields
+      const analyticsFields = createCollectionAnalyticsFields({ config: collectionAnalytics })
+      
+      // If tabbedUI is enabled and collection has tabs as first field, add to tabs
+      if (collectionAnalytics.tabbedUI !== false) {
+        const firstField = collection.fields?.[0]
+        if (firstField && firstField.type === 'tabs') {
+          return {
+            ...collection,
+            fields: [
+              {
+                ...firstField,
+                tabs: [
+                  ...firstField.tabs,
+                  {
+                    label: 'Analytics',
+                    fields: analyticsFields,
+                  },
+                ],
+              },
+              ...collection.fields.slice(1),
+            ],
+          }
+        }
+        // If no existing tabs, create tabs with Content and Analytics
+        return {
+          ...collection,
+          fields: [
+            {
+              type: 'tabs',
+              tabs: [
+                {
+                  label: 'Content',
+                  fields: collection.fields || [],
+                },
+                {
+                  label: 'Analytics',
+                  fields: analyticsFields,
+                },
+              ],
+            },
+          ],
+        }
+      }
+      
+      // Otherwise add as group field at the end
       return {
         ...collection,
         fields: [
           ...(collection.fields || []),
-          createAnalyticsTab(collection.slug, collectionAnalytics.rootPath),
+          ...analyticsFields,
         ],
       }
     }),
@@ -219,6 +265,7 @@ export * from './types'
 export * from './lib/formatters'
 export * from './constants'
 export { createAnalyticsTab } from './fields/analyticsTab'
+export { CollectionAnalyticsField } from './fields/collectionAnalytics'
 export { createPlausibleProvider } from './providers/plausible'
 export { createUmamiProvider } from './providers/umami'
 export { createMatomoProvider } from './providers/matomo'

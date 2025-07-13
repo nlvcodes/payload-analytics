@@ -1,0 +1,1 @@
+export { CollectionAnalyticsField } from '../dist/fields/collectionAnalytics'
