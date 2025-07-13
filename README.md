@@ -322,13 +322,7 @@ The plugin will automatically use these environment variables if not explicitly 
 - **Visit Duration**: Average time spent on site
 
 ### Visualizations
-- **Time Series Chart**: Interactive visitor trends over time with grouping options:
-  - **Hour**: Available for day and 7-day periods only
-  - **Day**: Daily aggregation (default, available for all periods)
-  - **Week**: Weekly aggregation (available for 6+ month periods)
-  - **Month**: Monthly aggregation (available for 6+ month periods)
-  
-  Note: Grouping availability depends on your analytics provider's API limitations. For example, Plausible doesn't support hourly data beyond 7 days or weekly/monthly data for short periods.
+- **Time Series Chart**: Interactive visitor trends over time
 - **Top Pages**: Most visited pages with metrics
 - **Traffic Sources**: Where your visitors come from
 - **Custom Events**: Goals and conversions tracking

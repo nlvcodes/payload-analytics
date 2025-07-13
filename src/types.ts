@@ -2,7 +2,7 @@ import type { Config } from 'payload'
 
 export interface AnalyticsProvider {
   name: string
-  getDashboardData: (period?: string, comparison?: ComparisonData, grouping?: TimeSeriesGrouping) => Promise<DashboardData | null>
+  getDashboardData: (period?: string, comparison?: ComparisonData) => Promise<DashboardData | null>
   trackEvent?: (eventName: string, props?: Record<string, any>) => void
 }
 
@@ -48,7 +48,6 @@ export type TimePeriod =
   | 'year'
   | 'lastYear'
   | 'thisYear'
-  | 'all'
   | 'custom'
   | string // Allow provider-specific periods
 
@@ -56,13 +55,6 @@ export type ComparisonOption =
   | 'previousPeriod' 
   | 'sameLastYear' 
   | 'custom'
-
-export type TimeSeriesGrouping = 
-  | 'hour'
-  | 'day'
-  | 'week'
-  | 'month'
-  | 'year'
 
 export interface ComparisonData {
   period: ComparisonOption

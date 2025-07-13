@@ -7,7 +7,6 @@ export const DEFAULT_TIME_PERIODS: TimePeriod[] = [
   'month',
   '6mo',
   '12mo',
-  'all',
   'custom',
 ]
 
@@ -30,7 +29,6 @@ export const TIME_PERIOD_LABELS: Record<string, string> = {
   year: 'Year to date',
   lastYear: 'Last year',
   thisYear: 'This year',
-  all: 'All time',
   custom: 'Custom date',
 }
 
@@ -57,7 +55,6 @@ export const PROVIDER_PERIOD_MAPPINGS = {
     year: 'custom', // Will need special handling
     lastYear: 'custom', // Will need special handling
     thisYear: 'custom', // Will need special handling
-    all: 'custom', // Will need special handling
   },
   umami: {
     // Umami uses timestamps, these are used for calculations
@@ -73,7 +70,6 @@ export const PROVIDER_PERIOD_MAPPINGS = {
     year: 'year',
     lastYear: 'lastYear',
     thisYear: 'year',
-    all: 'all',
   },
   matomo: {
     // Matomo period types
@@ -89,7 +85,6 @@ export const PROVIDER_PERIOD_MAPPINGS = {
     year: 'year',
     lastYear: 'range', // Needs date calculation
     thisYear: 'year',
-    all: 'range', // Needs date calculation
   },
   posthog: {
     // PostHog uses date ranges, these are used for calculations
@@ -105,7 +100,6 @@ export const PROVIDER_PERIOD_MAPPINGS = {
     year: 'year',
     lastYear: 'lastYear',
     thisYear: 'year',
-    all: 'all',
   },
   'google-analytics': {
     // GA4 relative date formats
@@ -121,7 +115,6 @@ export const PROVIDER_PERIOD_MAPPINGS = {
     year: 'custom', // Needs date calculation for year-to-date
     lastYear: 'custom', // Needs date calculation
     thisYear: 'custom', // Needs date calculation for year-to-date
-    all: '1095daysAgo', // 3 years of data (GA4 default retention)
   },
 }
 
