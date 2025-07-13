@@ -1,8 +1,9 @@
 import type { PayloadRequest } from 'payload'
 import type { AnalyticsProvider } from '../types'
 
-export const analyticsEndpoint = async (req: PayloadRequest) => {
+export const analyticsEndpoint = async (req: PayloadRequest): Promise<Response> => {
   console.log('[Analytics Endpoint] Called with URL:', req.url)
+  console.log('[Analytics Endpoint] Method:', req.method)
   
   const provider = (global as any).__analyticsProvider as AnalyticsProvider
   if (!provider) {

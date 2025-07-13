@@ -33,9 +33,11 @@ export const AnalyticsClient: React.FC = () => {
     const fetchData = async () => {
       setLoading(true)
       try {
-        let url = `/api/analytics/dashboard?period=${period}`
+        // Get the API route from the config
+        const apiRoute = (window as any).__payloadConfig?.routes?.api || '/api'
+        let url = `${apiRoute}/analytics/dashboard?period=${period}`
         if (period === 'custom' && customStartDate && customEndDate) {
-          url = `/api/analytics/dashboard?period=custom&start=${customStartDate}&end=${customEndDate}`
+          url = `${apiRoute}/analytics/dashboard?period=custom&start=${customStartDate}&end=${customEndDate}`
         }
         const response = await fetch(url, {
           credentials: 'same-origin',
@@ -311,8 +313,14 @@ export const AnalyticsClient: React.FC = () => {
               if (customStartDate && customEndDate) {
                 setLoading(true)
                 try {
-                  const url = `/api/analytics/dashboard?period=custom&start=${customStartDate}&end=${customEndDate}`
-                  const response = await fetch(url)
+                  const apiRoute = (window as any).__payloadConfig?.routes?.api || '/api'
+                  const url = `${apiRoute}/analytics/dashboard?period=custom&start=${customStartDate}&end=${customEndDate}`
+                  const response = await fetch(url, {
+                    credentials: 'same-origin',
+                    headers: {
+                      'Content-Type': 'application/json',
+                    },
+                  })
                   if (!response.ok) {
                     throw new Error('Failed to fetch analytics data')
                   }

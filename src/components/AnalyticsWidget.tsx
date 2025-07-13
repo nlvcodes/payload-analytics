@@ -27,7 +27,8 @@ export const AnalyticsWidget: React.FC = () => {
 
   useEffect(() => {
     // Widget always shows today's data
-    fetch('/api/analytics/dashboard?period=day', {
+    const apiRoute = (window as any).__payloadConfig?.routes?.api || '/api'
+    fetch(`${apiRoute}/analytics/dashboard?period=day`, {
       credentials: 'same-origin',
       headers: {
         'Content-Type': 'application/json',

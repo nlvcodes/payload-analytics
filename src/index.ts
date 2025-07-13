@@ -142,7 +142,7 @@ export const analyticsPlugin = (pluginConfig: AnalyticsPluginConfig | LegacyAnal
     endpoints: [
       ...(config.endpoints || []),
       {
-        path: '/api/analytics/dashboard',
+        path: '/analytics/dashboard',
         method: 'get',
         handler: analyticsEndpoint,
       },
