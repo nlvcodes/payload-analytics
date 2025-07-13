@@ -11,6 +11,7 @@ export const analyticsEndpoint = async (req: PayloadRequest): Promise<Response> 
   const period = url.searchParams.get('period') || '7d'
   const start = url.searchParams.get('start')
   const end = url.searchParams.get('end')
+  const grouping = url.searchParams.get('grouping') || 'day'
   
   // Get comparison parameters
   const comparisonType = url.searchParams.get('comparison')
@@ -33,7 +34,7 @@ export const analyticsEndpoint = async (req: PayloadRequest): Promise<Response> 
   }
   
   try {
-    const data = await provider.getDashboardData(effectivePeriod, comparison)
+    const data = await provider.getDashboardData(effectivePeriod, comparison, grouping as any)
     
     if (!data) {
       return Response.json({ error: 'Failed to fetch analytics data' }, { status: 500 })

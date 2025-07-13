@@ -242,22 +242,48 @@ analyticsPlugin({
     pages: {
       enabled: true,
       rootPath: '/',
+      tabbedUI: true, // Optional: add as tab (default) or group field
+      fields: ({ defaultFields }) => [...defaultFields], // Optional: customize fields
     },
     posts: {
       enabled: true,
       rootPath: '/blog',
+      tabbedUI: false, // Add as group field at end of collection
     },
   },
 })
 ```
 
-This adds an "Analytics" tab to each document in the specified collections, showing:
+**UI Options:**
+- **With `tabbedUI: true` (default)**: Analytics are added as a tab in your collection
+- **With `tabbedUI: false`**: Analytics are added as a group field at the end of your collection fields
+
+**Manual Field Usage:**
+
+You can also import and use the analytics field manually:
+
+```typescript
+import { CollectionAnalyticsField } from 'payload-analytics-plugin/fields'
+
+const Pages: CollectionConfig = {
+  slug: 'pages',
+  fields: [
+    // Your existing fields...
+    CollectionAnalyticsField('/', {
+      label: 'Page Analytics',
+      // Other field overrides
+    }),
+  ],
+}
+```
+
+This adds analytics showing:
 - Page-specific visitor count
 - Pageviews for that URL
 - Bounce rate
 - Average visit duration
 
-The analytics tab only appears for existing documents with a slug field. The plugin constructs the tracked URL as `{rootPath}/{slug}`.
+The analytics only appear for existing documents with a slug field. The plugin constructs the tracked URL as `{rootPath}/{slug}`.
 
 ## Environment Variables
 
@@ -296,7 +322,12 @@ The plugin will automatically use these environment variables if not explicitly 
 - **Visit Duration**: Average time spent on site
 
 ### Visualizations
-- **Time Series Chart**: Interactive visitor trends over time
+- **Time Series Chart**: Interactive visitor trends over time with grouping options:
+  - **Hour**: Available when viewing single day data
+  - **Day**: Daily aggregation (default)
+  - **Week**: Weekly aggregation
+  - **Month**: Monthly aggregation
+  - **Year**: Yearly aggregation
 - **Top Pages**: Most visited pages with metrics
 - **Traffic Sources**: Where your visitors come from
 - **Custom Events**: Goals and conversions tracking

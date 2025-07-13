@@ -7,8 +7,26 @@
   "files": [
     "dist",
     "components",
+    "fields",
     "README.md"
   ],
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./fields": {
+      "import": "./dist/fields/collectionAnalytics.js",
+      "types": "./dist/fields/collectionAnalytics.d.ts",
+      "default": "./dist/fields/collectionAnalytics.js"
+    },
+    "./types": {
+      "import": "./dist/types.js",
+      "types": "./dist/types.d.ts",
+      "default": "./dist/types.js"
+    }
+  },
   "scripts": {
     "build": "tsc",
     "dev": "tsc --watch",

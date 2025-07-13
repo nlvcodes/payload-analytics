@@ -32,9 +32,24 @@ export function formatChange(change: number | null): { text: string; isPositive:
   return { text, isPositive }
 }
 
-export function formatAxisDate(dateStr: string, period: string): string {
+export function formatAxisDate(dateStr: string, period: string, grouping?: string): string {
   const date = new Date(dateStr)
 
+  // Use grouping if provided, otherwise fall back to period-based formatting
+  if (grouping === 'hour') {
+    return date.toLocaleTimeString('en-US', { hour: 'numeric', hour12: true })
+  } else if (grouping === 'day') {
+    return date.toLocaleDateString('en-US', { month: 'numeric', day: 'numeric' })
+  } else if (grouping === 'week') {
+    // Show week starting date
+    return `Week of ${date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`
+  } else if (grouping === 'month') {
+    return date.toLocaleDateString('en-US', { month: 'short', year: '2-digit' })
+  } else if (grouping === 'year') {
+    return date.toLocaleDateString('en-US', { year: 'numeric' })
+  }
+  
+  // Fallback to period-based formatting
   if (period === 'day') {
     return date.toLocaleTimeString('en-US', { hour: 'numeric', hour12: true })
   } else if (period === '12mo') {
@@ -50,9 +65,24 @@ export function formatAxisDate(dateStr: string, period: string): string {
   }
 }
 
-export function formatTooltipDate(dateStr: string, period: string): string {
+export function formatTooltipDate(dateStr: string, period: string, grouping?: string): string {
   const date = new Date(dateStr)
 
+  // Use grouping if provided
+  if (grouping === 'hour') {
+    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) +
+      ' at ' + date.toLocaleTimeString('en-US', { hour: 'numeric', hour12: true })
+  } else if (grouping === 'week') {
+    const weekEnd = new Date(date)
+    weekEnd.setDate(date.getDate() + 6)
+    return `${date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} - ${weekEnd.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`
+  } else if (grouping === 'month') {
+    return date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
+  } else if (grouping === 'year') {
+    return date.toLocaleDateString('en-US', { year: 'numeric' })
+  }
+  
+  // Fallback to period-based formatting
   if (period === 'day') {
     return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) +
       ' at ' + date.toLocaleTimeString('en-US', { hour: 'numeric', hour12: true })

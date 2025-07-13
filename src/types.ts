@@ -2,7 +2,7 @@ import type { Config } from 'payload'
 
 export interface AnalyticsProvider {
   name: string
-  getDashboardData: (period?: string, comparison?: ComparisonData) => Promise<DashboardData | null>
+  getDashboardData: (period?: string, comparison?: ComparisonData, grouping?: TimeSeriesGrouping) => Promise<DashboardData | null>
   trackEvent?: (eventName: string, props?: Record<string, any>) => void
 }
 
@@ -57,6 +57,13 @@ export type ComparisonOption =
   | 'sameLastYear' 
   | 'custom'
 
+export type TimeSeriesGrouping = 
+  | 'hour'
+  | 'day'
+  | 'week'
+  | 'month'
+  | 'year'
+
 export interface ComparisonData {
   period: ComparisonOption
   customStartDate?: string
@@ -76,6 +83,8 @@ export interface AnalyticsViewConfig {
 export interface CollectionAnalyticsConfig {
   enabled: boolean
   rootPath: string
+  tabbedUI?: boolean
+  fields?: (args: { defaultFields: any[] }) => any[]
 }
 
 // Base configuration shared by all providers
