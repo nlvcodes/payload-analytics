@@ -59,39 +59,45 @@ export const AnalyticsView: React.FC<AdminViewServerProps> = ({ initPageResult, 
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
           <h1 style={{ margin: 0 }}>Analytics Dashboard</h1>
           {showExternalLink && externalDashboardUrl && (
-            <a
-              href={externalDashboardUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '0.25rem',
-                color: 'var(--theme-text-light)',
-                textDecoration: 'none',
-                fontSize: '0.875rem',
-                transition: 'color 0.2s',
-              }}
-              onMouseEnter={(e) => e.currentTarget.style.color = 'var(--theme-text)'}
-              onMouseLeave={(e) => e.currentTarget.style.color = 'var(--theme-text-light)'}
-            >
-              {externalDashboardLinkText || 'View in Dashboard'}
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 16 16"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
+            <>
+              <style>{`
+                .analytics-view-external-link {
+                  display: inline-flex;
+                  align-items: center;
+                  gap: 0.25rem;
+                  color: var(--theme-text-light);
+                  text-decoration: none;
+                  font-size: 0.875rem;
+                  transition: color 0.2s;
+                }
+                .analytics-view-external-link:hover {
+                  color: var(--theme-text);
+                }
+              `}</style>
+              <a
+                href={externalDashboardUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="analytics-view-external-link"
               >
-                <path
-                  d="M5.75 10.25L10.25 5.75M10.25 5.75H6.5M10.25 5.75V9.5"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </a>
+                {externalDashboardLinkText || 'View in Dashboard'}
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M5.75 10.25L10.25 5.75M10.25 5.75H6.5M10.25 5.75V9.5"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </a>
+            </>
           )}
         </div>
         <script
