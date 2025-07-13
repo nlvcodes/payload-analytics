@@ -295,6 +295,15 @@ export const AnalyticsClient: React.FC = () => {
               const newPeriod = (Array.isArray(option) ? option[0]?.value : option.value) as TimePeriod
               setPeriod(newPeriod)
               setShowCustomDatePicker(newPeriod === 'custom')
+              
+              // Reset grouping to 'day' if current grouping is not valid for new period
+              if (grouping === 'hour' && newPeriod !== 'day' && newPeriod !== '7d') {
+                setGrouping('day')
+              } else if ((grouping === 'week' || grouping === 'month') && 
+                         newPeriod !== '6mo' && newPeriod !== '12mo' && newPeriod !== 'year' && 
+                         newPeriod !== 'custom' && newPeriod !== 'all') {
+                setGrouping('day')
+              }
             }}
             options={timePeriods.map((tp: TimePeriod) => ({
               label: TIME_PERIOD_LABELS[tp] || tp,
@@ -592,13 +601,25 @@ export const AnalyticsClient: React.FC = () => {
               const newGrouping = (Array.isArray(option) ? option[0]?.value : option.value) as TimeSeriesGrouping
               setGrouping(newGrouping)
             }}
-            options={[
-              ...(period === 'day' ? [{ label: 'Hour', value: 'hour' }] : []),
-              { label: 'Day', value: 'day' },
-              { label: 'Week', value: 'week' },
-              { label: 'Month', value: 'month' },
-              { label: 'Year', value: 'year' },
-            ]}
+            options={(() => {
+              const opts = []
+              
+              // Hour - only for day and 7d periods
+              if (period === 'day' || period === '7d') {
+                opts.push({ label: 'Hour', value: 'hour' })
+              }
+              
+              // Day - always available
+              opts.push({ label: 'Day', value: 'day' })
+              
+              // Week and Month - only for longer periods
+              if (period === '6mo' || period === '12mo' || period === 'year' || period === 'custom' || period === 'all') {
+                opts.push({ label: 'Week', value: 'week' })
+                opts.push({ label: 'Month', value: 'month' })
+              }
+              
+              return opts
+            })()}
             isClearable={false}
             isSortable={false}
           />

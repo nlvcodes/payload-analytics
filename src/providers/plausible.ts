@@ -163,12 +163,31 @@ export function createPlausibleProvider(config: PlausibleConfig): AnalyticsProvi
         }
 
         // Map grouping to Plausible interval parameter
+        // Note: Plausible has limitations on intervals based on the period
         let interval = 'date' // default to day
-        if (grouping === 'hour') interval = 'hour'
-        else if (grouping === 'day') interval = 'date'
-        else if (grouping === 'week') interval = 'week'
-        else if (grouping === 'month') interval = 'month'
-        else if (grouping === 'year') interval = 'year'
+        
+        // Plausible interval limitations:
+        // - hour: only available for periods <= 7d
+        // - date: available for all periods
+        // - week: available for periods >= 6mo
+        // - month: available for periods >= 6mo
+        // - year: not supported by Plausible API
+        
+        if (grouping === 'hour' && (period === 'day' || period === '7d')) {
+          interval = 'hour'
+        } else if (grouping === 'day') {
+          interval = 'date'
+        } else if (grouping === 'week' && (period === '6mo' || period === '12mo' || period === 'year' || period.includes(','))) {
+          interval = 'week'
+        } else if (grouping === 'month' && (period === '6mo' || period === '12mo' || period === 'year' || period.includes(','))) {
+          interval = 'month'
+        } else if (grouping === 'year') {
+          // Year grouping not supported by Plausible, fallback to month
+          interval = 'month'
+        } else {
+          // If the requested grouping isn't supported for this period, use default
+          interval = 'date'
+        }
         
         const [statsResponse, timeseries, pages, sources, events, realtime] = await Promise.all([
           fetchPlausibleAPI(apiConfig, 'aggregate', apiParams, StatsSchema),
