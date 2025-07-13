@@ -16,6 +16,10 @@
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
     },
+    "./components/AnalyticsView": "./components/AnalyticsView.ts",
+    "./components/AnalyticsWidget": "./components/AnalyticsWidget.ts",
+    "./components/AfterNavLinks": "./components/AfterNavLinks.ts",
+    "./components/CollectionAnalyticsField": "./components/CollectionAnalyticsField.ts",
     "./fields": {
       "import": "./dist/fields/collectionAnalytics.js",
       "types": "./dist/fields/collectionAnalytics.d.ts",
