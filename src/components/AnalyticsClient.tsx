@@ -327,34 +327,75 @@ export const AnalyticsClient: React.FC = () => {
       {/* Custom Date Picker */}
       {showCustomDatePicker && (
         <div className="analytics-custom-date-picker">
-          <div className="analytics-date-inputs">
-            <div>
-              <label htmlFor="start-date" style={{ marginRight: '0.5rem' }}>From:</label>
-              <input
-                type="date"
-                id="start-date"
-                value={customStartDate}
-                onChange={(e) => setCustomStartDate(e.target.value)}
-                max={new Date().toISOString().split('T')[0]}
-              />
-            </div>
-            <div>
-              <label htmlFor="end-date" style={{ marginRight: '0.5rem' }}>To:</label>
-              <input
-                type="date"
-                id="end-date"
-                value={customEndDate}
-                onChange={(e) => setCustomEndDate(e.target.value)}
-                min={customStartDate}
-                max={new Date().toISOString().split('T')[0]}
-              />
+          <div style={{ marginBottom: '1rem' }}>
+            <h4 style={{ margin: '0 0 0.5rem 0', fontSize: '0.875rem', color: 'var(--theme-text)' }}>Date Range</h4>
+            <div className="analytics-date-inputs">
+              <div>
+                <label htmlFor="start-date" style={{ marginRight: '0.5rem' }}>From:</label>
+                <input
+                  type="date"
+                  id="start-date"
+                  value={customStartDate}
+                  onChange={(e) => setCustomStartDate(e.target.value)}
+                  max={new Date().toISOString().split('T')[0]}
+                />
+              </div>
+              <div>
+                <label htmlFor="end-date" style={{ marginRight: '0.5rem' }}>To:</label>
+                <input
+                  type="date"
+                  id="end-date"
+                  value={customEndDate}
+                  onChange={(e) => setCustomEndDate(e.target.value)}
+                  min={customStartDate}
+                  max={new Date().toISOString().split('T')[0]}
+                />
+              </div>
             </div>
           </div>
+          
+          {/* Comparison Custom Dates */}
+          {enableComparison && comparison?.period === 'custom' && (
+            <div style={{ marginBottom: '1rem' }}>
+              <h4 style={{ margin: '0 0 0.5rem 0', fontSize: '0.875rem', color: 'var(--theme-text)' }}>Comparison Range</h4>
+              <div className="analytics-date-inputs">
+                <div>
+                  <label htmlFor="compare-start-date" style={{ marginRight: '0.5rem' }}>From:</label>
+                  <input
+                    type="date"
+                    id="compare-start-date"
+                    value={comparison.customStartDate || ''}
+                    onChange={(e) => setComparison({ ...comparison, customStartDate: e.target.value })}
+                    max={new Date().toISOString().split('T')[0]}
+                  />
+                </div>
+                <div>
+                  <label htmlFor="compare-end-date" style={{ marginRight: '0.5rem' }}>To:</label>
+                  <input
+                    type="date"
+                    id="compare-end-date"
+                    value={comparison.customEndDate || ''}
+                    onChange={(e) => setComparison({ ...comparison, customEndDate: e.target.value })}
+                    min={comparison.customStartDate}
+                    max={new Date().toISOString().split('T')[0]}
+                  />
+                </div>
+              </div>
+            </div>
+          )}
+          
           <button
-            className={`btn btn--icon-style-without-border btn--size-medium btn--withoutPopup btn--style-primary ${(!customStartDate || !customEndDate) ? 'btn--disabled' : ''}`}
+            className={`btn btn--icon-style-without-border btn--size-medium btn--withoutPopup btn--style-primary ${
+              (!customStartDate || !customEndDate) || 
+              (comparison?.period === 'custom' && (!comparison.customStartDate || !comparison.customEndDate))
+                ? 'btn--disabled' 
+                : ''
+            }`}
             type="button"
             onClick={async () => {
-              if (customStartDate && customEndDate) {
+              if (customStartDate && customEndDate && 
+                  (!comparison || comparison.period !== 'custom' || 
+                   (comparison.customStartDate && comparison.customEndDate))) {
                 setIsTransitioning(true)
                 try {
                   const apiRoute = (window as any).__payloadConfig?.routes?.api || '/api'
@@ -387,7 +428,10 @@ export const AnalyticsClient: React.FC = () => {
                 }
               }
             }}
-            disabled={!customStartDate || !customEndDate}
+            disabled={
+              (!customStartDate || !customEndDate) || 
+              (comparison?.period === 'custom' && (!comparison.customStartDate || !comparison.customEndDate))
+            }
           >
             <span className="btn__content">
               <span className="btn__label">Apply</span>
