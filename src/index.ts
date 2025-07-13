@@ -7,6 +7,8 @@ import { createPostHogProvider } from './providers/posthog'
 import { createGoogleAnalyticsProvider } from './providers/google-analytics'
 import { DEFAULT_TIME_PERIODS, DEFAULT_COMPARISON_OPTIONS } from './constants'
 import { analyticsEndpoint } from './endpoints/analytics'
+import { collectionAnalyticsEndpoint } from './endpoints/collectionAnalytics'
+import { createAnalyticsTab } from './fields/analyticsTab'
 import path from 'path'
 
 export const analyticsPlugin = (pluginConfig: AnalyticsPluginConfig | LegacyAnalyticsPluginConfig) => (config: Config): Config => {
@@ -24,6 +26,7 @@ export const analyticsPlugin = (pluginConfig: AnalyticsPluginConfig | LegacyAnal
     defaultTimePeriod = '7d',
     comparisonOptions = DEFAULT_COMPARISON_OPTIONS,
     enableComparison = true,
+    collections = {},
   } = pluginConfig
 
   // Handle provider configuration - support both new and legacy patterns
@@ -142,7 +145,29 @@ export const analyticsPlugin = (pluginConfig: AnalyticsPluginConfig | LegacyAnal
         method: 'get',
         handler: analyticsEndpoint,
       },
+      {
+        path: '/analytics/collection',
+        method: 'get',
+        handler: collectionAnalyticsEndpoint,
+      },
     ],
+    collections: config.collections?.map(collection => {
+      // Check if this collection has analytics enabled
+      const collectionAnalytics = collections[collection.slug]
+      
+      if (!collectionAnalytics?.enabled) {
+        return collection
+      }
+      
+      // Add analytics tab to collection
+      return {
+        ...collection,
+        fields: [
+          ...(collection.fields || []),
+          createAnalyticsTab(collection.slug, collectionAnalytics.rootPath),
+        ],
+      }
+    }),
   }
 
   return updatedConfig
@@ -152,6 +177,7 @@ export const analyticsPlugin = (pluginConfig: AnalyticsPluginConfig | LegacyAnal
 export * from './types'
 export * from './lib/formatters'
 export * from './constants'
+export { createAnalyticsTab } from './fields/analyticsTab'
 export { createPlausibleProvider } from './providers/plausible'
 export { createUmamiProvider } from './providers/umami'
 export { createMatomoProvider } from './providers/matomo'

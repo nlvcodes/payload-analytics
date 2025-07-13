@@ -67,6 +67,11 @@ export interface AnalyticsViewConfig {
   position?: 'beforeNavLinks' | 'afterNavLinks'
 }
 
+export interface CollectionAnalyticsConfig {
+  enabled: boolean
+  rootPath: string
+}
+
 // Base configuration shared by all providers
 interface BaseAnalyticsConfig {
   enabled?: boolean
@@ -80,6 +85,7 @@ interface BaseAnalyticsConfig {
   defaultTimePeriod?: TimePeriod
   comparisonOptions?: ComparisonOption[]
   enableComparison?: boolean
+  collections?: Record<string, CollectionAnalyticsConfig>
 }
 
 // Provider-specific configurations using discriminated unions
