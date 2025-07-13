@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { AnalyticsProvider, DashboardData } from '../types'
+import { AnalyticsProvider, DashboardData, ComparisonData } from '../types'
 
 export interface PostHogConfig {
   apiKey?: string
@@ -135,7 +135,7 @@ export function createPostHogProvider(config: PostHogConfig = {}): AnalyticsProv
 
   return {
     name: 'posthog',
-    async getDashboardData(period?: string): Promise<DashboardData | null> {
+    async getDashboardData(period: string = '7d', comparison?: ComparisonData): Promise<DashboardData | null> {
       try {
         const dateRange = getPostHogDateRange(period)
 

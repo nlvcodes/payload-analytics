@@ -3,9 +3,10 @@
 import React, { useEffect, useState } from 'react'
 import { XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Area, AreaChart } from 'recharts'
 import { formatNumber, formatDuration, formatPercentage, formatChange, formatAxisDate, formatTooltipDate } from '../lib/formatters'
-import type { DashboardData, TimePeriod } from '../types'
+import type { DashboardData, TimePeriod, ComparisonData } from '../types'
 import { TIME_PERIOD_LABELS } from '../constants'
 import {SelectInput} from "@payloadcms/ui";
+import { ComparisonSelector } from './ComparisonSelector'
 import { ExternalLink } from './ExternalLink'
 
 export const AnalyticsClient: React.FC = () => {
@@ -36,6 +37,7 @@ export const AnalyticsClient: React.FC = () => {
   const [showCustomDatePicker, setShowCustomDatePicker] = useState(false)
   const [customStartDate, setCustomStartDate] = useState('')
   const [customEndDate, setCustomEndDate] = useState(new Date().toISOString().split('T')[0])
+  const [comparison, setComparison] = useState<ComparisonData | null>(null)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -46,6 +48,15 @@ export const AnalyticsClient: React.FC = () => {
         let url = `${apiRoute}/analytics/dashboard?period=${period}`
         if (period === 'custom' && customStartDate && customEndDate) {
           url = `${apiRoute}/analytics/dashboard?period=custom&start=${customStartDate}&end=${customEndDate}`
+        }
+        
+        // Add comparison parameters
+        if (comparison) {
+          if (comparison.period === 'custom' && comparison.customStartDate && comparison.customEndDate) {
+            url += `&comparison=custom&compareStart=${comparison.customStartDate}&compareEnd=${comparison.customEndDate}`
+          } else {
+            url += `&comparison=${comparison.period}`
+          }
         }
         const response = await fetch(url, {
           credentials: 'same-origin',
@@ -68,7 +79,7 @@ export const AnalyticsClient: React.FC = () => {
     if (period !== 'custom') {
       fetchData()
     }
-  }, [period])
+  }, [period, comparison])
 
   // Add custom styles for analytics
   useEffect(() => {
@@ -239,7 +250,8 @@ export const AnalyticsClient: React.FC = () => {
         gap: '1rem',
         marginBottom: '2rem'
       }}>
-        <div className="analytics-select-wrapper" style={{ width: '50%', minWidth: '300px' }}>
+        <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+          <div className="analytics-select-wrapper" style={{ flex: '1 1 300px', minWidth: '300px' }}>
           <SelectInput
             label="Time Period"
             name="analytics-period"
@@ -258,7 +270,21 @@ export const AnalyticsClient: React.FC = () => {
             isClearable={false}
             isSortable={false}
           />
+          </div>
+          
+          {enableComparison && (
+            <div className="analytics-select-wrapper" style={{ flex: '1 1 300px', minWidth: '300px' }}>
+              <ComparisonSelector
+                value={comparison}
+                onChange={setComparison}
+                currentPeriod={period}
+                currentStartDate={customStartDate}
+                currentEndDate={customEndDate}
+              />
+            </div>
+          )}
         </div>
+        
         <div style={{ 
           display: 'flex', 
           alignItems: 'center',
@@ -304,7 +330,17 @@ export const AnalyticsClient: React.FC = () => {
                 setLoading(true)
                 try {
                   const apiRoute = (window as any).__payloadConfig?.routes?.api || '/api'
-                  const url = `${apiRoute}/analytics/dashboard?period=custom&start=${customStartDate}&end=${customEndDate}`
+                  let url = `${apiRoute}/analytics/dashboard?period=custom&start=${customStartDate}&end=${customEndDate}`
+                  
+                  // Add comparison parameters
+                  if (comparison) {
+                    if (comparison.period === 'custom' && comparison.customStartDate && comparison.customEndDate) {
+                      url += `&comparison=custom&compareStart=${comparison.customStartDate}&compareEnd=${comparison.customEndDate}`
+                    } else {
+                      url += `&comparison=${comparison.period}`
+                    }
+                  }
+                  
                   const response = await fetch(url, {
                     credentials: 'same-origin',
                     headers: {
@@ -354,11 +390,14 @@ export const AnalyticsClient: React.FC = () => {
             color: 'var(--theme-text)',
             marginBottom: '0.5rem'
           }}>{formatNumber(stats.visitors.value)}</div>
-          {enableComparison && (
-            <div className={`analytics-stat-change ${stats.visitors.change && stats.visitors.change > 0 ? 'positive' : 'negative'}`} style={{
-              fontSize: '0.875rem'
+          {enableComparison && comparison && stats.visitors.change !== null && (
+            <div className={`analytics-stat-change ${stats.visitors.change > 0 ? 'positive' : 'negative'}`} style={{
+              fontSize: '0.875rem',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.25rem'
             }}>
-              {formatChange(stats.visitors.change).text} from previous period
+              {stats.visitors.change > 0 ? '↑' : '↓'} {Math.abs(stats.visitors.change).toFixed(1)}%
             </div>
           )}
         </div>
@@ -378,11 +417,14 @@ export const AnalyticsClient: React.FC = () => {
             color: 'var(--theme-text)',
             marginBottom: '0.5rem'
           }}>{formatNumber(stats.pageviews.value)}</div>
-          {enableComparison && (
-            <div className={`analytics-stat-change ${stats.pageviews.change && stats.pageviews.change > 0 ? 'positive' : 'negative'}`} style={{
-              fontSize: '0.875rem'
+          {enableComparison && comparison && stats.pageviews.change !== null && (
+            <div className={`analytics-stat-change ${stats.pageviews.change > 0 ? 'positive' : 'negative'}`} style={{
+              fontSize: '0.875rem',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.25rem'
             }}>
-              {formatChange(stats.pageviews.change).text} from previous period
+              {stats.pageviews.change > 0 ? '↑' : '↓'} {Math.abs(stats.pageviews.change).toFixed(1)}%
             </div>
           )}
         </div>
@@ -402,11 +444,14 @@ export const AnalyticsClient: React.FC = () => {
             color: 'var(--theme-text)',
             marginBottom: '0.5rem'
           }}>{formatPercentage(stats.bounce_rate.value)}</div>
-          {enableComparison && (
-            <div className={`analytics-stat-change ${stats.bounce_rate.change && stats.bounce_rate.change < 0 ? 'positive' : 'negative'}`} style={{
-              fontSize: '0.875rem'
+          {enableComparison && comparison && stats.bounce_rate.change !== null && (
+            <div className={`analytics-stat-change ${stats.bounce_rate.change < 0 ? 'positive' : 'negative'}`} style={{
+              fontSize: '0.875rem',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.25rem'
             }}>
-              {formatChange(stats.bounce_rate.change).text} from previous period
+              {stats.bounce_rate.change < 0 ? '↓' : '↑'} {Math.abs(stats.bounce_rate.change).toFixed(1)}%
             </div>
           )}
         </div>
@@ -426,11 +471,14 @@ export const AnalyticsClient: React.FC = () => {
             color: 'var(--theme-text)',
             marginBottom: '0.5rem'
           }}>{formatDuration(stats.visit_duration.value)}</div>
-          {enableComparison && (
-            <div className={`analytics-stat-change ${stats.visit_duration.change && stats.visit_duration.change > 0 ? 'positive' : 'negative'}`} style={{
-              fontSize: '0.875rem'
+          {enableComparison && comparison && stats.visit_duration.change !== null && (
+            <div className={`analytics-stat-change ${stats.visit_duration.change > 0 ? 'positive' : 'negative'}`} style={{
+              fontSize: '0.875rem',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.25rem'
             }}>
-              {formatChange(stats.visit_duration.change).text} from previous period
+              {stats.visit_duration.change > 0 ? '↑' : '↓'} {Math.abs(stats.visit_duration.change).toFixed(1)}%
             </div>
           )}
         </div>

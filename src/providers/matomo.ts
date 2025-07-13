@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import type { AnalyticsProvider, DashboardData } from '../types'
+import type { AnalyticsProvider, DashboardData, ComparisonData } from '../types'
 
 export interface MatomoConfig {
   apiToken?: string
@@ -130,7 +130,7 @@ export function createMatomoProvider(config: MatomoConfig): AnalyticsProvider {
   return {
     name: 'matomo',
     
-    async getDashboardData(period: string = '7d'): Promise<DashboardData | null> {
+    async getDashboardData(period: string = '7d', comparison?: ComparisonData): Promise<DashboardData | null> {
       if (!apiConfig.apiToken || !apiConfig.siteId) {
         console.warn('Matomo API token or site ID is not configured')
         return null
