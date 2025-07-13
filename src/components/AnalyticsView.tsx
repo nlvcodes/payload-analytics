@@ -29,6 +29,9 @@ export const AnalyticsView: React.FC<AdminViewServerProps> = ({ initPageResult, 
   const defaultTimePeriod = (global as any).__analyticsDefaultTimePeriod
   const enableComparison = (global as any).__analyticsEnableComparison
   const dashboardPath = (global as any).__analyticsDashboardPath || '/analytics'
+  const externalDashboardUrl = (global as any).__analyticsExternalDashboardUrl
+  const externalDashboardLinkText = (global as any).__analyticsExternalDashboardLinkText
+  const showExternalLink = (global as any).__analyticsShowExternalLink
   
   // Get admin route from Payload config
   const adminRoute = '/admin' // Default admin route
@@ -53,13 +56,53 @@ export const AnalyticsView: React.FC<AdminViewServerProps> = ({ initPageResult, 
     <SetStepNav nav={navItems} />
     <div style={{ marginBottom: 'calc(var(--base) * 3)' }}>
       <Gutter>
-        <h1>Analytics Dashboard</h1>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+          <h1 style={{ margin: 0 }}>Analytics Dashboard</h1>
+          {showExternalLink && externalDashboardUrl && (
+            <a
+              href={externalDashboardUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.25rem',
+                color: 'var(--theme-text-light)',
+                textDecoration: 'none',
+                fontSize: '0.875rem',
+                transition: 'color 0.2s',
+              }}
+              onMouseEnter={(e) => e.currentTarget.style.color = 'var(--theme-text)'}
+              onMouseLeave={(e) => e.currentTarget.style.color = 'var(--theme-text-light)'}
+            >
+              {externalDashboardLinkText || 'View in Dashboard'}
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 16 16"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M5.75 10.25L10.25 5.75M10.25 5.75H6.5M10.25 5.75V9.5"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </a>
+          )}
+        </div>
         <script
           dangerouslySetInnerHTML={{
             __html: `
               window.__analyticsTimePeriods = ${JSON.stringify(timePeriods)};
               window.__analyticsDefaultTimePeriod = ${JSON.stringify(defaultTimePeriod)};
               window.__analyticsEnableComparison = ${JSON.stringify(enableComparison)};
+              window.__analyticsExternalDashboardUrl = ${JSON.stringify(externalDashboardUrl)};
+              window.__analyticsExternalDashboardLinkText = ${JSON.stringify(externalDashboardLinkText)};
+              window.__analyticsShowExternalLink = ${JSON.stringify(showExternalLink)};
             `,
           }}
         />

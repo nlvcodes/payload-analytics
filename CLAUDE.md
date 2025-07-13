@@ -168,3 +168,4 @@ plugins: [
 
 ## Assistant Memories
 - Always use context7. Let me know if you don't have access to it.
+- never mention yourself in git commits, merges, PRs, or anything else with git
