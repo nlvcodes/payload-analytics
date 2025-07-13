@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import type { AnalyticsProvider, DashboardData } from '../types'
+import type { AnalyticsProvider, DashboardData, ComparisonData } from '../types'
 
 export interface UmamiConfig {
   apiKey?: string
@@ -136,7 +136,7 @@ export function createUmamiProvider(config: UmamiConfig): AnalyticsProvider {
   return {
     name: 'umami',
     
-    async getDashboardData(period: string = '7d'): Promise<DashboardData | null> {
+    async getDashboardData(period: string = '7d', comparison?: ComparisonData): Promise<DashboardData | null> {
       if (!apiConfig.apiKey || !apiConfig.siteId) {
         console.warn('Umami API key or site ID is not configured')
         return null
