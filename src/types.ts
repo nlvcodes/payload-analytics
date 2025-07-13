@@ -73,6 +73,11 @@ export interface AnalyticsViewConfig {
   position?: 'beforeNavLinks' | 'afterNavLinks'
 }
 
+export interface CollectionAnalyticsConfig {
+  enabled: boolean
+  rootPath: string
+}
+
 // Base configuration shared by all providers
 interface BaseAnalyticsConfig {
   enabled?: boolean
@@ -89,6 +94,7 @@ interface BaseAnalyticsConfig {
   externalDashboardUrl?: string
   externalDashboardLinkText?: string
   showExternalLink?: boolean
+  collections?: Record<string, CollectionAnalyticsConfig>
 }
 
 // Provider-specific configurations using discriminated unions

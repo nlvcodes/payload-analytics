@@ -188,6 +188,7 @@ analyticsPlugin({
 | `defaultTimePeriod` | `TimePeriod` | `'7d'` | Default selected time period |
 | `comparisonOptions` | `ComparisonOption[]` | `['previousPeriod', 'sameLastYear', 'custom']` | Available comparison options |
 | `enableComparison` | `boolean` | `true` | Enable period-over-period comparisons |
+| `collections` | `Record<string, CollectionAnalyticsConfig>` | `{}` | Enable analytics tabs for specific collections |
 
 ### Provider Configurations
 
@@ -229,6 +230,34 @@ analyticsPlugin({
 |--------|------|-------------|
 | `propertyId` | `string` | Your GA4 property ID |
 | `apiKey` | `string` | Your Google Analytics API key |
+
+### Collection Analytics
+
+Enable analytics for specific collections to track page-level metrics:
+
+```typescript
+analyticsPlugin({
+  provider: 'plausible',
+  collections: {
+    pages: {
+      enabled: true,
+      rootPath: '/',
+    },
+    posts: {
+      enabled: true,
+      rootPath: '/blog',
+    },
+  },
+})
+```
+
+This adds an "Analytics" tab to each document in the specified collections, showing:
+- Page-specific visitor count
+- Pageviews for that URL
+- Bounce rate
+- Average visit duration
+
+The analytics tab only appears for existing documents with a slug field. The plugin constructs the tracked URL as `{rootPath}/{slug}`.
 
 ## Environment Variables
 
