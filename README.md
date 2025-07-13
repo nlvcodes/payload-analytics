@@ -101,6 +101,8 @@ analyticsPlugin({
 })
 ```
 
+📖 **[Detailed Google Analytics Setup Guide](./docs/google-analytics-setup.md)** - Step-by-step instructions for configuring GA4 with this plugin.
+
 ## Advanced Configuration
 
 ### Dashboard Widget Positioning
@@ -425,9 +427,10 @@ import type {
 ### Google Analytics
 - Uses GA4 Data API v1 (not Universal Analytics)
 - Requires API key authentication (simpler than OAuth)
-- Real-time data requires additional API permissions
+- Real-time data is limited to current visitor count
 - Custom events exclude page_view events
-- Supports all standard GA4 dimensions and metrics
+- Processing delay of 24-48 hours for historical data
+- See the [setup guide](./docs/google-analytics-setup.md) for detailed configuration instructions
 
 ## Coming Soon
 
