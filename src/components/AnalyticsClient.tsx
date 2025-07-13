@@ -5,6 +5,7 @@ import { XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Area, AreaCh
 import { formatNumber, formatDuration, formatPercentage, formatChange, formatAxisDate, formatTooltipDate } from '../lib/formatters'
 import type { DashboardData, TimePeriod } from '../types'
 import { TIME_PERIOD_LABELS } from '../constants'
+import {SelectInput} from "@payloadcms/ui";
 
 export const AnalyticsClient: React.FC = () => {
   const [data, setData] = useState<DashboardData | null>(null)
@@ -87,10 +88,6 @@ export const AnalyticsClient: React.FC = () => {
         vertical-align: middle;
         margin-right: 0.5rem;
       }
-      .field-type.select.analytics-period-field {
-        margin-top: 0;
-        margin-bottom: 0;
-      }
       .card {
         background: var(--theme-elevation-100);
         border: 1px solid var(--theme-elevation-200);
@@ -101,12 +98,6 @@ export const AnalyticsClient: React.FC = () => {
         border: 1px solid var(--theme-elevation-200);
         border-radius: var(--style-radius-m);
         padding: calc(var(--base) * 1.5);
-      }
-      .analytics-period-field {
-        margin-bottom: 0;
-      }
-      .analytics-period-field .field-label {
-        margin-bottom: 0.5rem;
       }
       .analytics-stat-change.positive {
         color: var(--theme-success-600);
@@ -216,27 +207,22 @@ export const AnalyticsClient: React.FC = () => {
         flexWrap: 'wrap',
         gap: '1rem'
       }}>
-        <div className="field-type select analytics-period-field">
-          <label className="field-label" htmlFor="analytics-period">Time Period</label>
-          <div className="field-type__wrap">
-            <select
-              id="analytics-period"
-              value={period}
-              onChange={(e) => {
-                const newPeriod = e.target.value as TimePeriod
-                setPeriod(newPeriod)
-                setShowCustomDatePicker(newPeriod === 'custom')
-              }}
-              className="select"
-            >
-              {timePeriods.map((tp: TimePeriod) => (
-                <option key={tp} value={tp}>
-                  {TIME_PERIOD_LABELS[tp] || tp}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
+        <SelectInput
+          label="Time Period"
+          name="analytics-period"
+          path="analytics-period"
+          value={period}
+          onChange={(option) => {
+            if (!option) return
+            const newPeriod = (Array.isArray(option) ? option[0]?.value : option.value) as TimePeriod
+            setPeriod(newPeriod)
+            setShowCustomDatePicker(newPeriod === 'custom')
+          }}
+          options={timePeriods.map((tp: TimePeriod) => ({
+            label: TIME_PERIOD_LABELS[tp] || tp,
+            value: tp
+          }))}
+        />
         <div style={{ 
           display: 'flex', 
           alignItems: 'center',
