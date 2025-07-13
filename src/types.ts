@@ -103,33 +103,33 @@ export interface LegacyAnalyticsPluginConfig extends BaseAnalyticsConfig {
 }
 
 export interface DashboardData {
-  stats: {
+  stats?: {
     visitors: { value: number; change: number | null }
     pageviews: { value: number; change: number | null }
     bounce_rate: { value: number; change: number | null }
     visit_duration: { value: number; change: number | null }
   }
-  timeseries: Array<{
+  timeseries?: Array<{
     date: string
     visitors: number
     pageviews?: number
     bounce_rate?: number
     visit_duration?: number
   }>
-  pages: Array<{
+  pages?: Array<{
     page: string
     visitors: number
     pageviews: number
     bounce_rate: number
     visit_duration: number
   }>
-  sources: Array<{
+  sources?: Array<{
     source: string
     visitors: number
     bounce_rate: number
     visit_duration: number
   }>
-  events: Array<{
+  events?: Array<{
     goal: string
     visitors: number
     events: number

@@ -222,7 +222,7 @@ export const AnalyticsClient: React.FC = () => {
     )
   }
 
-  if (error || !data) {
+  if (error || !data || !data.stats) {
     return (
       <div className="payload__message payload__message--error">
         {error || 'Unable to load analytics data'}
@@ -230,7 +230,7 @@ export const AnalyticsClient: React.FC = () => {
     )
   }
 
-  const { stats, timeseries, pages, sources, events, realtime = { visitors: 0 } } = data
+  const { stats, timeseries = [], pages = [], sources = [], events = [], realtime = { visitors: 0 } } = data
 
   return (
     <div>

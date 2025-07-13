@@ -34,7 +34,7 @@ export const AnalyticsWidget: React.FC = () => {
       .finally(() => setLoading(false))
   }, [])
 
-  if (loading || !data) {
+  if (loading || !data || !data.stats) {
     return null
   }
 
@@ -60,28 +60,28 @@ export const AnalyticsWidget: React.FC = () => {
         <div>
           <div style={{ fontSize: '0.75rem', color: 'var(--theme-text-light)' }}>Visitors</div>
           <div style={{ fontSize: '1.5rem', fontWeight: '600', color: 'var(--theme-text)' }}>
-            {formatNumber(data.stats.visitors.value)}
+            {formatNumber(data.stats?.visitors?.value || 0)}
           </div>
         </div>
         
         <div>
           <div style={{ fontSize: '0.75rem', color: 'var(--theme-text-light)' }}>Pageviews</div>
           <div style={{ fontSize: '1.5rem', fontWeight: '600', color: 'var(--theme-text)' }}>
-            {formatNumber(data.stats.pageviews.value)}
+            {formatNumber(data.stats?.pageviews?.value || 0)}
           </div>
         </div>
         
         <div>
           <div style={{ fontSize: '0.75rem', color: 'var(--theme-text-light)' }}>Bounce Rate</div>
           <div style={{ fontSize: '1.5rem', fontWeight: '600', color: 'var(--theme-text)' }}>
-            {formatPercentage(data.stats.bounce_rate.value)}
+            {formatPercentage(data.stats?.bounce_rate?.value || 0)}
           </div>
         </div>
         
         <div>
           <div style={{ fontSize: '0.75rem', color: 'var(--theme-text-light)' }}>Avg Duration</div>
           <div style={{ fontSize: '1.5rem', fontWeight: '600', color: 'var(--theme-text)' }}>
-            {formatDuration(data.stats.visit_duration.value)}
+            {formatDuration(data.stats?.visit_duration?.value || 0)}
           </div>
         </div>
       </div>
