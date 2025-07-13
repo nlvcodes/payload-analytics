@@ -105,10 +105,6 @@ export const analyticsPlugin = (pluginConfig: AnalyticsPluginConfig | LegacyAnal
   ;(global as any).__analyticsDashboardPath = dashboardPath
   ;(global as any).__adminRoute = '/admin' // Default admin route
 
-  // Log for debugging
-  console.log('[Analytics Plugin] Initializing with provider:', typeof provider === 'string' ? provider : 'custom')
-  console.log('[Analytics Plugin] Registering endpoint at /api/analytics/dashboard')
-  console.log('[Analytics Plugin] Existing endpoints:', config.endpoints?.length || 0)
 
   const updatedConfig: Config = {
     ...config,
@@ -149,8 +145,6 @@ export const analyticsPlugin = (pluginConfig: AnalyticsPluginConfig | LegacyAnal
     ],
   }
 
-  console.log('[Analytics Plugin] Total endpoints after plugin:', updatedConfig.endpoints?.length || 0)
-  
   return updatedConfig
 }
 

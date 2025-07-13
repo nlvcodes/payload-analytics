@@ -91,32 +91,6 @@ export const AnalyticsClient: React.FC = () => {
         margin-top: 0;
         margin-bottom: 0;
       }
-      .field-type.select.analytics-period-field .select {
-        padding: 0.5rem 2rem 0.5rem 1rem;
-        border: 1px solid var(--theme-elevation-200);
-        border-radius: var(--style-radius-s);
-        background-color: var(--theme-elevation-0);
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23999' d='M10.293 3.293L6 7.586 1.707 3.293A1 1 0 00.293 4.707l5 5a1 1 0 001.414 0l5-5a1 1 0 10-1.414-1.414z'/%3E%3C/svg%3E");
-        background-repeat: no-repeat;
-        background-position: right 0.75rem center;
-        background-size: 12px;
-        color: var(--theme-text);
-        font-size: var(--font-size-small);
-        font-family: var(--font-family);
-        line-height: var(--line-height-s);
-        cursor: pointer;
-        appearance: none;
-        transition: all var(--transition-duration-default) var(--transition-timing-default);
-      }
-      .field-type.select.analytics-period-field .select:hover {
-        border-color: var(--theme-elevation-300);
-        background-color: var(--theme-elevation-50);
-      }
-      .field-type.select.analytics-period-field .select:focus {
-        outline: none;
-        border-color: var(--theme-success-500);
-        box-shadow: 0 0 0 3px var(--theme-success-100);
-      }
       .card {
         background: var(--theme-elevation-100);
         border: 1px solid var(--theme-elevation-200);
