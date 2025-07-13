@@ -7,6 +7,7 @@ import type { DashboardData, TimePeriod, ComparisonData } from '../types'
 import { TIME_PERIOD_LABELS } from '../constants'
 import {SelectInput} from "@payloadcms/ui";
 import { ComparisonSelector } from './ComparisonSelector'
+import { ExternalLink } from './ExternalLink'
 
 export const AnalyticsClient: React.FC = () => {
   const [data, setData] = useState<DashboardData | null>(null)
@@ -17,12 +18,18 @@ export const AnalyticsClient: React.FC = () => {
   const [timePeriods, setTimePeriods] = useState<TimePeriod[]>(['day', '7d', '30d', '12mo'])
   const [defaultTimePeriod, setDefaultTimePeriod] = useState<TimePeriod>('7d')
   const [enableComparison, setEnableComparison] = useState<boolean>(true)
+  const [externalUrl, setExternalUrl] = useState<string | null>(null)
+  const [externalLinkText, setExternalLinkText] = useState<string>('View in Dashboard')
+  const [showExternalLink, setShowExternalLink] = useState<boolean>(true)
   
   useEffect(() => {
     if (typeof window !== 'undefined') {
       setTimePeriods((window as any).__analyticsTimePeriods || ['day', '7d', '30d', '12mo'])
       setDefaultTimePeriod((window as any).__analyticsDefaultTimePeriod || '7d')
       setEnableComparison((window as any).__analyticsEnableComparison !== false)
+      setExternalUrl((window as any).__analyticsExternalDashboardUrl || null)
+      setExternalLinkText((window as any).__analyticsExternalDashboardLinkText || 'View in Dashboard')
+      setShowExternalLink((window as any).__analyticsShowExternalLink !== false)
     }
   }, [])
   

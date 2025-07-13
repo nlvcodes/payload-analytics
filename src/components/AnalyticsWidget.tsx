@@ -3,10 +3,14 @@
 import React, { useEffect, useState } from 'react'
 import { formatNumber, formatPercentage, formatDuration } from '../lib/formatters'
 import type { DashboardData } from '../types'
+import { ExternalLink } from './ExternalLink'
 
 export const AnalyticsWidget: React.FC = () => {
   const [data, setData] = useState<DashboardData | null>(null)
   const [loading, setLoading] = useState(true)
+  const [externalUrl, setExternalUrl] = useState<string | null>(null)
+  const [externalLinkText, setExternalLinkText] = useState<string>('View in Dashboard')
+  const [showExternalLink, setShowExternalLink] = useState<boolean>(true)
 
   // Add styles
   useEffect(() => {
@@ -17,6 +21,26 @@ export const AnalyticsWidget: React.FC = () => {
         border: 1px solid var(--theme-elevation-200);
         border-radius: var(--style-radius-m);
         padding: calc(var(--base) * 1.5);
+        position: relative;
+      }
+      .analytics-external-link {
+        position: absolute;
+        bottom: calc(var(--base) * 1.5);
+        right: calc(var(--base) * 1.5);
+        display: inline-flex;
+        align-items: center;
+        gap: 0.25rem;
+        color: var(--theme-text-light);
+        text-decoration: none;
+        font-size: 0.875rem;
+        transition: color 0.2s;
+      }
+      .analytics-external-link:hover {
+        color: var(--theme-text);
+      }
+      .analytics-external-link-icon {
+        width: 14px;
+        height: 14px;
       }
     `
     document.head.appendChild(style)
@@ -26,6 +50,13 @@ export const AnalyticsWidget: React.FC = () => {
   }, [])
 
   useEffect(() => {
+    // Get config from global
+    if (typeof window !== 'undefined') {
+      setExternalUrl((window as any).__analyticsExternalDashboardUrl || null)
+      setExternalLinkText((window as any).__analyticsExternalDashboardLinkText || 'View in Dashboard')
+      setShowExternalLink((window as any).__analyticsShowExternalLink !== false)
+    }
+    
     // Widget always shows today's data
     const apiRoute = (window as any).__payloadConfig?.routes?.api || '/api'
     fetch(`${apiRoute}/analytics/dashboard?period=day`, {
@@ -91,6 +122,12 @@ export const AnalyticsWidget: React.FC = () => {
           </div>
         </div>
       </div>
+      {showExternalLink && externalUrl && (
+        <ExternalLink 
+          href={externalUrl}
+          text={externalLinkText}
+        />
+      )}
     </div>
   )
 }

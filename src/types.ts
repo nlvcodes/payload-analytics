@@ -86,6 +86,9 @@ interface BaseAnalyticsConfig {
   defaultTimePeriod?: TimePeriod
   comparisonOptions?: ComparisonOption[]
   enableComparison?: boolean
+  externalDashboardUrl?: string
+  externalDashboardLinkText?: string
+  showExternalLink?: boolean
 }
 
 // Provider-specific configurations using discriminated unions
