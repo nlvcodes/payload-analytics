@@ -26,6 +26,9 @@ export const analyticsPlugin = (pluginConfig: AnalyticsPluginConfig | LegacyAnal
     defaultTimePeriod = '7d',
     comparisonOptions = DEFAULT_COMPARISON_OPTIONS,
     enableComparison = true,
+    externalDashboardUrl,
+    externalDashboardLinkText,
+    showExternalLink = true,
     collections = {},
   } = pluginConfig
 
@@ -97,6 +100,41 @@ export const analyticsPlugin = (pluginConfig: AnalyticsPluginConfig | LegacyAnal
     providerInstance = provider
   }
 
+  // Generate default external URL if not provided
+  let finalExternalUrl = externalDashboardUrl
+  if (!finalExternalUrl && typeof provider === 'string') {
+    switch (provider) {
+      case 'plausible':
+        if (providerConfig.siteId && providerConfig.apiHost) {
+          finalExternalUrl = `${providerConfig.apiHost}/${providerConfig.siteId}`
+        }
+        break
+      case 'umami':
+        if (providerConfig.siteId && providerConfig.apiHost) {
+          finalExternalUrl = `${providerConfig.apiHost}/websites/${providerConfig.siteId}`
+        }
+        break
+      case 'matomo':
+        if (providerConfig.siteId && providerConfig.apiHost) {
+          finalExternalUrl = `${providerConfig.apiHost}/index.php?module=CoreHome&action=index&idSite=${providerConfig.siteId}&period=day&date=today`
+        }
+        break
+      case 'posthog':
+        if (providerConfig.projectId && providerConfig.apiHost) {
+          finalExternalUrl = `${providerConfig.apiHost}/project/${providerConfig.projectId}/dashboard`
+        }
+        break
+      case 'google-analytics':
+        if (providerConfig.propertyId) {
+          finalExternalUrl = `https://analytics.google.com/analytics/web/#/report-home/a${providerConfig.propertyId}`
+        }
+        break
+    }
+  }
+
+  // Generate default link text if not provided
+  const finalLinkText = externalDashboardLinkText || `View in ${typeof provider === 'string' ? provider.charAt(0).toUpperCase() + provider.slice(1).replace(/-/g, ' ') : 'Dashboard'}`
+
   // Store provider and config in global for API routes and components
   ;(global as any).__analyticsProvider = providerInstance
   ;(global as any).__analyticsProviderName = typeof provider === 'string' ? provider : provider.name
@@ -106,6 +144,9 @@ export const analyticsPlugin = (pluginConfig: AnalyticsPluginConfig | LegacyAnal
   ;(global as any).__analyticsComparisonOptions = comparisonOptions
   ;(global as any).__analyticsEnableComparison = enableComparison
   ;(global as any).__analyticsDashboardPath = dashboardPath
+  ;(global as any).__analyticsExternalDashboardUrl = finalExternalUrl
+  ;(global as any).__analyticsExternalDashboardLinkText = finalLinkText
+  ;(global as any).__analyticsShowExternalLink = showExternalLink
   ;(global as any).__adminRoute = '/admin' // Default admin route
 
 

@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import type { AnalyticsProvider, PlausibleConfig, DashboardData } from '../types'
+import type { AnalyticsProvider, PlausibleConfig, DashboardData, ComparisonData } from '../types'
 
 const TimePeriodSchema = z.object({
   date: z.string(),
@@ -104,7 +104,7 @@ export function createPlausibleProvider(config: PlausibleConfig): AnalyticsProvi
   return {
     name: 'plausible',
     
-    async getDashboardData(period: string = '7d'): Promise<DashboardData | null> {
+    async getDashboardData(period: string = '7d', comparison?: ComparisonData): Promise<DashboardData | null> {
       if (!apiConfig.apiKey || !apiConfig.siteId) {
         console.warn('Plausible API key or site ID is not configured')
         return null
@@ -147,7 +147,19 @@ export function createPlausibleProvider(config: PlausibleConfig): AnalyticsProvi
           apiParams.date = `${lastMonth.toISOString().split('T')[0]},${lastMonthEnd.toISOString().split('T')[0]}`
         } else {
           apiParams.period = period
-          apiParams.compare = 'previous_period'
+        }
+        
+        // Add comparison parameters
+        if (comparison) {
+          if (comparison.period === 'previousPeriod') {
+            apiParams.compare = 'previous_period'
+          } else if (comparison.period === 'sameLastYear') {
+            apiParams.compare = 'previous_year'
+          } else if (comparison.period === 'custom' && comparison.customStartDate && comparison.customEndDate) {
+            // For custom comparison, we'll need to make a separate API call
+            apiParams.compare_from = comparison.customStartDate
+            apiParams.compare_to = comparison.customEndDate
+          }
         }
 
         const [statsResponse, timeseries, pages, sources, events, realtime] = await Promise.all([

@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { AnalyticsProvider, DashboardData } from '../types'
+import { AnalyticsProvider, DashboardData, ComparisonData } from '../types'
 
 export interface GoogleAnalyticsConfig {
   propertyId?: string
@@ -143,7 +143,7 @@ export function createGoogleAnalyticsProvider(config: GoogleAnalyticsConfig = {}
 
   return {
     name: 'google-analytics',
-    async getDashboardData(period?: string): Promise<DashboardData | null> {
+    async getDashboardData(period: string = '7d', comparison?: ComparisonData): Promise<DashboardData | null> {
       try {
         const dateRanges = getGA4DateRange(period)
 

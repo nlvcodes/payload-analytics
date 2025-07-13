@@ -2,7 +2,7 @@ import type { Config } from 'payload'
 
 export interface AnalyticsProvider {
   name: string
-  getDashboardData: (period?: string) => Promise<DashboardData | null>
+  getDashboardData: (period?: string, comparison?: ComparisonData) => Promise<DashboardData | null>
   trackEvent?: (eventName: string, props?: Record<string, any>) => void
 }
 
@@ -57,6 +57,12 @@ export type ComparisonOption =
   | 'sameLastYear' 
   | 'custom'
 
+export interface ComparisonData {
+  period: ComparisonOption
+  customStartDate?: string
+  customEndDate?: string
+}
+
 export interface DashboardWidgetConfig {
   enabled?: boolean
   position?: 'beforeDashboard' | 'afterDashboard'
@@ -85,6 +91,9 @@ interface BaseAnalyticsConfig {
   defaultTimePeriod?: TimePeriod
   comparisonOptions?: ComparisonOption[]
   enableComparison?: boolean
+  externalDashboardUrl?: string
+  externalDashboardLinkText?: string
+  showExternalLink?: boolean
   collections?: Record<string, CollectionAnalyticsConfig>
 }
 
