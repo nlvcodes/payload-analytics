@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      payload-analytics-plugin:
+        specifier: github:nlvcodes/payload-analytics
+        version: https://codeload.github.com/nlvcodes/payload-analytics/tar.gz/1163221097cedf451c8e0d8192b9d6e4b4afd6a5(payload@3.45.0(graphql@16.11.0)(typescript@5.8.3))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       recharts:
         specifier: ^2.13.3
         version: 2.15.4(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -16,10 +19,10 @@ importers:
         version: 3.25.74
     devDependencies:
       '@payloadcms/next':
-        specifier: ^3.45.0
+        specifier: ^3.0.0
         version: 3.45.0(graphql@16.11.0)(monaco-editor@0.52.2)(next@15.3.5(@babel/core@7.28.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.77.4))(payload@3.45.0(graphql@16.11.0)(typescript@5.8.3))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(types-react@19.0.0-rc.1)(typescript@5.8.3)
       '@payloadcms/ui':
-        specifier: ^3.45.0
+        specifier: ^3.0.0
         version: 3.45.0(monaco-editor@0.52.2)(next@15.3.5(@babel/core@7.28.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.77.4))(payload@3.45.0(graphql@16.11.0)(typescript@5.8.3))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(types-react@19.0.0-rc.1)(typescript@5.8.3)
       '@testing-library/jest-dom':
         specifier: ^6.6.3
@@ -61,7 +64,7 @@ importers:
         specifier: ^15.3.5
         version: 15.3.5(@babel/core@7.28.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.77.4)
       payload:
-        specifier: ^3.43.0
+        specifier: ^3.0.0
         version: 3.45.0(graphql@16.11.0)(typescript@5.8.3)
       react:
         specifier: 19.0.0
@@ -2132,6 +2135,14 @@ packages:
   pathval@2.0.1:
     resolution: {integrity: sha512-//nshmD55c46FuFw26xV/xFAaB5HF9Xdap7HJBBnrKdAd6/GxDBaNA1870O79+9ueg61cZLSVc+OaFlfmObYVQ==}
     engines: {node: '>= 14.16'}
+
+  payload-analytics-plugin@https://codeload.github.com/nlvcodes/payload-analytics/tar.gz/1163221097cedf451c8e0d8192b9d6e4b4afd6a5:
+    resolution: {tarball: https://codeload.github.com/nlvcodes/payload-analytics/tar.gz/1163221097cedf451c8e0d8192b9d6e4b4afd6a5}
+    version: 0.1.0
+    peerDependencies:
+      payload: ^3.0.0
+      react: ^19.0.0
+      react-dom: ^19.0.0
 
   payload@3.45.0:
     resolution: {integrity: sha512-CcgFBkWm9WGIs1tb+RJyAsAOuMfcNOwLpjXkh8je8DWywY5Km1MkAYqOue7qpIgGA22PzSoyXmWKIy94RLfNdw==}
@@ -4748,6 +4759,14 @@ snapshots:
   pathe@1.1.2: {}
 
   pathval@2.0.1: {}
+
+  payload-analytics-plugin@https://codeload.github.com/nlvcodes/payload-analytics/tar.gz/1163221097cedf451c8e0d8192b9d6e4b4afd6a5(payload@3.45.0(graphql@16.11.0)(typescript@5.8.3))(react-dom@19.0.0(react@19.0.0))(react@19.0.0):
+    dependencies:
+      payload: 3.45.0(graphql@16.11.0)(typescript@5.8.3)
+      react: 19.0.0
+      react-dom: 19.0.0(react@19.0.0)
+      recharts: 2.15.4(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      zod: 3.25.74
 
   payload@3.45.0(graphql@16.11.0)(typescript@5.8.3):
     dependencies:

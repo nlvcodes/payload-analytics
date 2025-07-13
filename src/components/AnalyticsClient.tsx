@@ -222,6 +222,8 @@ export const AnalyticsClient: React.FC = () => {
             label: TIME_PERIOD_LABELS[tp] || tp,
             value: tp
           }))}
+          isClearable={false}
+          isSortable={false}
         />
         <div style={{ 
           display: 'flex', 
