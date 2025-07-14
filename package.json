@@ -57,8 +57,8 @@
     "react-dom": "^19.0.0"
   },
   "dependencies": {
-    "recharts": "^2.13.3",
-    "zod": "^3.23.8"
+    "recharts": "^3.1.0",
+    "zod": "^4.0.5"
   },
   "devDependencies": {
     "@payloadcms/next": "^3.0.0",
